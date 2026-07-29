@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Idioma por defecto (español). Al ser la carpeta `values/` sin sufijo, Android cae aquí
+    automáticamente cuando el idioma del dispositivo no es ninguno de los soportados
+    (ver `values-en/` y `values-ca/`).
+-->
+<resources>
+    <string name="app_name" translatable="false">HourFlow</string>
+
+    <!-- Acciones comunes a toda la app -->
+    <string name="accion_guardar">Guardar</string>
+    <string name="accion_cancelar">Cancelar</string>
+    <string name="accion_eliminar">Eliminar</string>
+    <string name="accion_editar">Editar</string>
+    <string name="accion_aceptar">Aceptar</string>
+    <string name="accion_volver">Volver</string>
+    <string name="accion_anadir">+ Añadir</string>
+    <string name="accion_continuar">Continuar</string>
+    <string name="accion_entendido">Entendido</string>
+    <string name="accion_deshacer">Deshacer</string>
+    <string name="accion_compartir">Compartir</string>
+    <string name="accion_seguir_editando">Seguir editando</string>
+    <string name="accion_descartar_cambios">Descartar cambios</string>
+    <string name="cambios_sin_guardar_titulo">Cambios sin guardar</string>
+    <string name="accion_mas_opciones">Más opciones</string>
+
+    <!-- Campos de formulario compartidos -->
+    <string name="campo_obligatorio">Campo obligatorio</string>
+    <string name="campo_numero_invalido">Introduce un número válido, ej. 8,50</string>
+    <string name="campo_fecha">Fecha</string>
+    <string name="campo_nombre">Nombre</string>
+
+    <!-- Pantalla: Mis Trabajos -->
+    <string name="trabajos_titulo">Mis Trabajos</string>
+    <string name="trabajos_vacio_titulo">Añade tu primer trabajo</string>
+    <string name="trabajos_vacio_mensaje">Registra tus horas y lo que ganas en cada trabajo. Empieza creando el primero.</string>
+    <string name="trabajos_vacio_boton">Crear trabajo</string>
+    <string name="trabajo_nuevo">Nuevo trabajo</string>
+    <string name="trabajo_editar">Editar trabajo</string>
+    <string name="trabajo_anadir">Añadir trabajo</string>
+    <string name="trabajo_mas_opciones">Más opciones de %1$s</string>
+    <string name="trabajo_eliminar_titulo">Eliminar trabajo</string>
+    <string name="trabajo_eliminar_mensaje">Se eliminará \"%1$s\" junto con todas sus horas, tarifas y dinero extra registrados. Esta acción no se puede deshacer.</string>
+    <string name="trabajo_campo_nombre">Nombre del trabajo</string>
+    <string name="trabajo_campo_tu_nombre">Tu nombre</string>
+    <string name="trabajo_campo_moneda">Moneda</string>
+    <string name="trabajo_foto_opcional">Foto opcional</string>
+    <string name="trabajo_elegir_foto">Elegir foto</string>
+    <string name="trabajo_cambiar_foto">Cambiar</string>
+    <string name="trabajo_quitar_foto">Quitar</string>
+    <string name="trabajo_total_horas">Horas totales</string>
+    <string name="trabajo_total_dinero">Dinero total</string>
+    <string name="trabajo_tiempo_real">Tiempo real</string>
+    <string name="trabajo_meses_actividad">Meses con actividad</string>
+    <string name="trabajo_primer_registro">Primer registro</string>
+    <string name="trabajo_ultimo_registro">Último registro: %1$s</string>
+    <string name="trabajo_sin_registros">Sin registros</string>
+
+    <!-- Monedas -->
+    <string name="moneda_euro">Euro</string>
+    <string name="moneda_dolar">Dólar</string>
+    <string name="moneda_libra">Libra</string>
+    <string name="moneda_yen">Yen</string>
+    <string name="moneda_franco">Franco suizo</string>
+    <string name="moneda_opcion">%1$s (%2$s)</string>
+
+    <!-- Pantalla: Año -->
+    <string name="anio_hoy">Hoy</string>
+    <string name="anio_anterior">Año anterior</string>
+    <string name="anio_siguiente">Año siguiente</string>
+    <string name="anio_total">%1$s · %2$s</string>
+
+    <!-- Pantalla: Mes -->
+    <string name="mes_titulo">%1$s · %2$s %3$d</string>
+    <string name="mes_ver_resumen">Ver resumen y exportar</string>
+    <string name="mes_boton_resumen">Resumen</string>
+    <string name="mes_tarifa_etiqueta">Tarifa este mes</string>
+    <string name="mes_tarifa_valor">%1$s %2$s/hora</string>
+    <string name="mes_tarifa_sin_fijar">sin fijar</string>
+    <string name="mes_dinero_extra_titulo">Dinero extra este mes</string>
+    <string name="mes_editar_dinero_extra">Editar dinero extra</string>
+    <string name="mes_eliminar_dinero_extra">Eliminar dinero extra</string>
+    <string name="mes_eliminar_dinero_extra_titulo">Eliminar dinero extra</string>
+    <string name="mes_eliminar_dinero_extra_mensaje">Se eliminará \"%1$s\" (%2$s). Esta acción se podrá deshacer unos segundos.</string>
+    <string name="mes_dinero_extra_eliminado">Dinero extra eliminado</string>
+    <string name="mes_dinero_extra_fila">%1$d/%2$d · %3$s</string>
+    <string name="mes_total_dinero">Total dinero: %1$s</string>
+    <string name="mes_total_horas">Total horas: %1$s</string>
+    <string name="mes_dia_encabezado">%1$d (%2$s)</string>
+    <string name="mes_dia_valor">%1$s · %2$s</string>
+    <string name="mes_total_semana">Total semana</string>
+    <string name="mes_total_semana_parcial">Total semana (parcial)</string>
+    <string name="mes_semana_resumen">%1$s: %2$s · %3$s</string>
+    <string name="marcador_nocturno">Incluye turno nocturno</string>
+    <string name="marcador_tarifa_distinta">Incluye tarifa distinta a la del mes</string>
+    <string name="marcador_varios_turnos">Incluye %1$d turnos ese día</string>
+
+    <!-- Diálogo: tarifa del mes -->
+    <string name="tarifa_dialogo_titulo">Tarifa por hora de este mes</string>
+    <string name="tarifa_campo_precio">Precio por hora (%1$s)</string>
+
+    <!-- Formulario: dinero extra -->
+    <string name="dinero_extra_titulo">Dinero extra</string>
+    <string name="dinero_extra_campo_cantidad">Cantidad (puede ser negativa)</string>
+    <string name="dinero_extra_campo_descripcion">Descripción (ej. reparto)</string>
+    <string name="dinero_extra_descartar_cambios_mensaje">Has cambiado este dinero extra. ¿Quieres seguir editando o descartar los cambios?</string>
+
+    <!-- Formulario: horas del día -->
+    <string name="entrada_titulo">Horas del %1$s</string>
+    <string name="entrada_anadir_turno">Añadir otro turno</string>
+    <string name="entrada_eliminar_titulo">Eliminar turno</string>
+    <string name="entrada_eliminar_mensaje">Se eliminará el turno %1$s. Esta acción se podrá deshacer unos segundos.</string>
+    <string name="entrada_descartar_cambios_mensaje">Has cambiado este turno. ¿Quieres seguir editando o descartar los cambios?</string>
+    <string name="entrada_turno_eliminado">Turno eliminado</string>
+    <string name="entrada_rango_horas">%1$s - %2$s</string>
+    <string name="entrada_sufijo_dia_siguiente">(+1 día)</string>
+    <string name="entrada_hora_entrada">Entrada</string>
+    <string name="entrada_hora_salida">Salida</string>
+    <string name="entrada_turno_nocturno">Turno nocturno</string>
+    <string name="entrada_que_es_nocturno">Qué significa turno nocturno</string>
+    <string name="entrada_error_horario">La hora de salida no puede ser anterior a la de entrada, salvo turno nocturno</string>
+    <string name="entrada_error_solapa">Este turno se solapa con otro ya registrado ese día</string>
+    <string name="entrada_campo_nota">Nota</string>
+    <string name="entrada_anadir_nota">+ Añadir nota</string>
+    <string name="entrada_tarifa_distinta">Tarifa distinta para este turno</string>
+    <string name="entrada_tarifa_turno">Tarifa de este turno: %1$s %2$s/hora</string>
+    <string name="entrada_nocturno_explicacion">Actívalo si el turno cruza la medianoche. Ejemplo: entras a las 22:00 y sales a las 06:00 — la hora de salida se cuenta como del día siguiente.</string>
+
+    <!-- Pantalla: Ajustes -->
+    <string name="ajustes_titulo">Ajustes</string>
+    <string name="ajustes_tema">Tema</string>
+    <string name="tema_sistema">Sistema</string>
+    <string name="tema_claro">Claro</string>
+    <string name="tema_oscuro">Oscuro</string>
+    <string name="ajustes_idioma">Idioma</string>
+    <string name="idioma_sistema">Sistema</string>
+    <string name="idioma_espanol">Español</string>
+    <string name="idioma_ingles">Inglés</string>
+    <string name="idioma_catalan">Catalán</string>
+    <string name="ajustes_backup">Backup</string>
+    <string name="ajustes_backup_descripcion">Exporta tus trabajos, horas y tarifas a un archivo, o restaura desde uno.</string>
+    <string name="ajustes_exportar_backup">Exportar backup (JSON)</string>
+    <string name="ajustes_importar_backup">Importar backup (JSON)</string>
+    <string name="ajustes_importar_titulo">Importar backup</string>
+    <string name="ajustes_importar_mensaje">Los trabajos del archivo se añadirán como trabajos nuevos. No se sobrescribirán ni se eliminarán tus trabajos actuales.</string>
+    <string name="ajustes_backup_importado">Backup importado correctamente.</string>
+    <string name="ajustes_error_exportar">No se pudo exportar el backup.</string>
+    <string name="ajustes_error_importar">No se pudo importar el backup: el archivo no es válido.</string>
+    <string name="ajustes_error_leer">No se pudo leer el archivo seleccionado.</string>
+
+    <!-- Pantalla: Resumen -->
+    <string name="resumen_titulo">Resumen</string>
+    <string name="resumen_exportar_pdf">Exportar PDF</string>
+    <string name="resumen_exportar_jpeg">Exportar JPEG</string>
+    <string name="resumen_error_exportar">No se pudo generar el archivo. Inténtalo de nuevo.</string>
+
+    <!-- Plantillas de semana y mes -->
+    <string name="plantillas_titulo">Plantillas</string>
+    <string name="plantillas_tab_semanas">Semanas</string>
+    <string name="plantillas_tab_meses">Meses</string>
+    <string name="plantillas_semanas_vacio">No hay plantillas de semana</string>
+    <string name="plantillas_meses_vacio">No hay plantillas de mes</string>
+    <string name="plantilla_nueva_semana">Nueva plantilla de semana</string>
+    <string name="plantilla_editar_semana">Editar plantilla de semana</string>
+    <string name="plantilla_nuevo_mes">Nueva plantilla de mes</string>
+    <string name="plantilla_editar_mes">Editar plantilla de mes</string>
+    <string name="plantilla_eliminar_titulo">Eliminar plantilla</string>
+    <string name="plantilla_eliminar_mensaje">Se eliminará \"%1$s\". Esta acción no se puede deshacer.</string>
+    <string name="plantilla_dias_laborales">%1$d días laborales</string>
+    <string name="plantilla_semanas_configuradas">%1$d semanas configuradas</string>
+    <string name="plantilla_semana_default">Plantilla base</string>
+    <string name="plantilla_sin_seleccion">Sin selección</string>
+    <string name="plantilla_overrides_semana">Personalización por semana</string>
+    <string name="plantilla_semana_libre">Semana libre</string>
+    <string name="plantilla_usar_base">Usar base</string>
+    <string name="plantilla_picker_vacio">No hay plantillas disponibles</string>
+    <string name="plantilla_aplicar_semana">Aplicar plantilla de semana</string>
+    <string name="plantilla_aplicar_mes">Aplicar plantilla de mes</string>
+    <string name="plantilla_elegir_semana">Elegir plantilla de semana</string>
+    <string name="plantilla_elegir_mes">Elegir plantilla de mes</string>
+
+    <string name="plantilla_cambios_semana_mensaje">Has cambiado esta plantilla de semana. ¿Quieres seguir editando o descartar los cambios?</string>
+    <string name="plantilla_cambios_mes_mensaje">Has cambiado esta plantilla de mes. ¿Quieres seguir editando o descartar los cambios?</string>
+    <string name="tarifa_descartar_cambios_mensaje">Has cambiado la tarifa de este mes. ¿Quieres seguir editando o descartar los cambios?</string>
+    <string name="trabajo_descartar_cambios_mensaje">Has cambiado este trabajo. ¿Quieres seguir editando o descartar los cambios?</string>
+
+    <!-- Diálogo de conflicto al aplicar plantillas -->
+    <string name="conflicto_titulo">Hay entradas existentes</string>
+    <string name="conflicto_mensaje_corto">%1$d días ya tienen entradas registradas (%2$s). ¿Qué quieres hacer?</string>
+    <string name="conflicto_mensaje_largo">%1$d días ya tienen entradas registradas. ¿Qué quieres hacer?</string>
+    <string name="conflicto_reemplazar">Reemplazar todo</string>
+    <string name="conflicto_solo_vacios">Solo días vacíos</string>
+
+    <!-- Mes: limpiar mes -->
+    <string name="mes_limpiar">Limpiar mes</string>
+    <string name="mes_limpiar_titulo">Limpiar mes</string>
+    <string name="mes_limpiar_mensaje">Se eliminarán todas las horas, dinero extra y la tarifa de este mes. Esta acción no se puede deshacer.</string>
+
+    <!-- Mes: cabecera de semana -->
+    <string name="mes_semana_encabezado">%1$s → %2$s</string>
+
+    <!-- Contenido de los documentos exportados (PDF y JPEG) -->
+    <string name="export_pie_de_marca">HourFlow — hecho por RoyPM</string>
+    <string name="export_encabezado">%1$s — %2$s — %3$s %4$d</string>
+    <string name="export_tarifa">Tarifa: %1$s</string>
+    <string name="export_por_hora">%1$s/hora</string>
+    <string name="export_horas_del_mes">Horas del mes</string>
+    <string name="export_total_horas_mes">Total horas del mes</string>
+    <string name="export_total_dinero_extra">Total dinero extra</string>
+    <string name="export_total_a_cobrar">TOTAL A COBRAR</string>
+    <string name="export_entrada">%1$s (%2$s) %3$s - %4$s</string>
+    <string name="export_tarifa_custom">(%1$s/h)</string>
+    <string name="export_fila_dinero_extra">%1$s  %2$s</string>
+</resources>

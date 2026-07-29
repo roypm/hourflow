@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- English. `app_name` is a proper noun and stays in values/ (translatable="false"). -->
+<resources>
+
+    <!-- Actions shared across the app -->
+    <string name="accion_guardar">Save</string>
+    <string name="accion_cancelar">Cancel</string>
+    <string name="accion_eliminar">Delete</string>
+    <string name="accion_editar">Edit</string>
+    <string name="accion_aceptar">OK</string>
+    <string name="accion_volver">Back</string>
+    <string name="accion_anadir">+ Add</string>
+    <string name="accion_continuar">Continue</string>
+    <string name="accion_entendido">Got it</string>
+    <string name="accion_deshacer">Undo</string>
+    <string name="accion_compartir">Share</string>
+    <string name="accion_seguir_editando">Keep editing</string>
+    <string name="accion_descartar_cambios">Discard changes</string>
+    <string name="cambios_sin_guardar_titulo">Unsaved changes</string>
+    <string name="accion_mas_opciones">More options</string>
+
+    <!-- Shared form fields -->
+    <string name="campo_obligatorio">Required field</string>
+    <string name="campo_numero_invalido">Enter a valid number, e.g. 8,50</string>
+    <string name="campo_fecha">Date</string>
+    <string name="campo_nombre">Name</string>
+
+    <!-- Screen: My Jobs -->
+    <string name="trabajos_titulo">My Jobs</string>
+    <string name="trabajos_vacio_titulo">Add your first job</string>
+    <string name="trabajos_vacio_mensaje">Track your hours and what you earn at each job. Start by creating the first one.</string>
+    <string name="trabajos_vacio_boton">Create job</string>
+    <string name="trabajo_nuevo">New job</string>
+    <string name="trabajo_editar">Edit job</string>
+    <string name="trabajo_anadir">Add job</string>
+    <string name="trabajo_mas_opciones">More options for %1$s</string>
+    <string name="trabajo_eliminar_titulo">Delete job</string>
+    <string name="trabajo_eliminar_mensaje">\"%1$s\" will be deleted along with all its recorded hours, rates and extra money. This action cannot be undone.</string>
+    <string name="trabajo_campo_nombre">Job name</string>
+    <string name="trabajo_campo_tu_nombre">Your name</string>
+    <string name="trabajo_campo_moneda">Currency</string>
+    <string name="trabajo_foto_opcional">Optional photo</string>
+    <string name="trabajo_elegir_foto">Choose photo</string>
+    <string name="trabajo_cambiar_foto">Change</string>
+    <string name="trabajo_quitar_foto">Remove</string>
+    <string name="trabajo_total_horas">Total hours</string>
+    <string name="trabajo_total_dinero">Total money</string>
+    <string name="trabajo_tiempo_real">Real time</string>
+    <string name="trabajo_meses_actividad">Active months</string>
+    <string name="trabajo_primer_registro">First record</string>
+    <string name="trabajo_ultimo_registro">Last record: %1$s</string>
+    <string name="trabajo_sin_registros">No records</string>
+
+    <!-- Currencies -->
+    <string name="moneda_euro">Euro</string>
+    <string name="moneda_dolar">Dollar</string>
+    <string name="moneda_libra">Pound</string>
+    <string name="moneda_yen">Yen</string>
+    <string name="moneda_franco">Swiss franc</string>
+    <string name="moneda_opcion">%1$s (%2$s)</string>
+
+    <!-- Screen: Year -->
+    <string name="anio_hoy">Today</string>
+    <string name="anio_anterior">Previous year</string>
+    <string name="anio_siguiente">Next year</string>
+    <string name="anio_total">%1$s · %2$s</string>
+
+    <!-- Screen: Month -->
+    <string name="mes_titulo">%1$s · %2$s %3$d</string>
+    <string name="mes_ver_resumen">View summary and export</string>
+    <string name="mes_boton_resumen">Summary</string>
+    <string name="mes_tarifa_etiqueta">Rate this month</string>
+    <string name="mes_tarifa_valor">%1$s %2$s/hour</string>
+    <string name="mes_tarifa_sin_fijar">not set</string>
+    <string name="mes_dinero_extra_titulo">Extra money this month</string>
+    <string name="mes_editar_dinero_extra">Edit extra money</string>
+    <string name="mes_eliminar_dinero_extra">Delete extra money</string>
+    <string name="mes_eliminar_dinero_extra_titulo">Delete extra money</string>
+    <string name="mes_eliminar_dinero_extra_mensaje">\"%1$s\" (%2$s) will be deleted. You can undo this for a few seconds.</string>
+    <string name="mes_dinero_extra_eliminado">Extra money deleted</string>
+    <string name="mes_dinero_extra_fila">%1$d/%2$d · %3$s</string>
+    <string name="mes_total_dinero">Total money: %1$s</string>
+    <string name="mes_total_horas">Total hours: %1$s</string>
+    <string name="mes_dia_encabezado">%1$d (%2$s)</string>
+    <string name="mes_dia_valor">%1$s · %2$s</string>
+    <string name="mes_total_semana">Week total</string>
+    <string name="mes_total_semana_parcial">Week total (partial)</string>
+    <string name="mes_semana_resumen">%1$s: %2$s · %3$s</string>
+    <string name="marcador_nocturno">Includes a night shift</string>
+    <string name="marcador_tarifa_distinta">Includes a rate different from the monthly one</string>
+    <string name="marcador_varios_turnos">Includes %1$d shifts that day</string>
+
+    <!-- Dialog: monthly rate -->
+    <string name="tarifa_dialogo_titulo">Hourly rate for this month</string>
+    <string name="tarifa_campo_precio">Price per hour (%1$s)</string>
+
+    <!-- Form: extra money -->
+    <string name="dinero_extra_titulo">Extra money</string>
+    <string name="dinero_extra_campo_cantidad">Amount (can be negative)</string>
+    <string name="dinero_extra_campo_descripcion">Description (e.g. delivery)</string>
+    <string name="dinero_extra_descartar_cambios_mensaje">You changed this extra money entry. Do you want to keep editing or discard the changes?</string>
+
+    <!-- Form: hours for a day -->
+    <string name="entrada_titulo">Hours for %1$s</string>
+    <string name="entrada_anadir_turno">Add another shift</string>
+    <string name="entrada_eliminar_titulo">Delete shift</string>
+    <string name="entrada_eliminar_mensaje">Shift %1$s will be deleted. You can undo this for a few seconds.</string>
+    <string name="entrada_descartar_cambios_mensaje">You changed this shift. Do you want to keep editing or discard the changes?</string>
+    <string name="entrada_turno_eliminado">Shift deleted</string>
+    <string name="entrada_rango_horas">%1$s - %2$s</string>
+    <string name="entrada_sufijo_dia_siguiente">(+1 day)</string>
+    <string name="entrada_hora_entrada">Start</string>
+    <string name="entrada_hora_salida">End</string>
+    <string name="entrada_turno_nocturno">Night shift</string>
+    <string name="entrada_que_es_nocturno">What a night shift means</string>
+    <string name="entrada_error_horario">The end time cannot be earlier than the start time, unless it is a night shift</string>
+    <string name="entrada_error_solapa">This shift overlaps another one already recorded that day</string>
+    <string name="entrada_campo_nota">Note</string>
+    <string name="entrada_anadir_nota">+ Add note</string>
+    <string name="entrada_tarifa_distinta">Different rate for this shift</string>
+    <string name="entrada_tarifa_turno">Rate for this shift: %1$s %2$s/hour</string>
+    <string name="entrada_nocturno_explicacion">Turn this on if the shift crosses midnight. For example: you start at 22:00 and finish at 06:00 — the end time counts as the next day.</string>
+
+    <!-- Screen: Settings -->
+    <string name="ajustes_titulo">Settings</string>
+    <string name="ajustes_tema">Theme</string>
+    <string name="tema_sistema">System</string>
+    <string name="tema_claro">Light</string>
+    <string name="tema_oscuro">Dark</string>
+    <string name="ajustes_idioma">Language</string>
+    <string name="idioma_sistema">System</string>
+    <string name="idioma_espanol">Spanish</string>
+    <string name="idioma_ingles">English</string>
+    <string name="idioma_catalan">Catalan</string>
+    <string name="ajustes_backup">Backup</string>
+    <string name="ajustes_backup_descripcion">Export your jobs, hours and rates to a file, or restore from one.</string>
+    <string name="ajustes_exportar_backup">Export backup (JSON)</string>
+    <string name="ajustes_importar_backup">Import backup (JSON)</string>
+    <string name="ajustes_importar_titulo">Import backup</string>
+    <string name="ajustes_importar_mensaje">The jobs in the file will be added as new jobs. Your current jobs will not be overwritten or deleted.</string>
+    <string name="ajustes_backup_importado">Backup imported successfully.</string>
+    <string name="ajustes_error_exportar">The backup could not be exported.</string>
+    <string name="ajustes_error_importar">The backup could not be imported: the file is not valid.</string>
+    <string name="ajustes_error_leer">The selected file could not be read.</string>
+
+    <!-- Screen: Summary -->
+    <string name="resumen_titulo">Summary</string>
+    <string name="resumen_exportar_pdf">Export PDF</string>
+    <string name="resumen_exportar_jpeg">Export JPEG</string>
+    <string name="resumen_error_exportar">The file could not be generated. Please try again.</string>
+
+    <!-- Week and month templates -->
+    <string name="plantillas_titulo">Templates</string>
+    <string name="plantillas_tab_semanas">Weeks</string>
+    <string name="plantillas_tab_meses">Months</string>
+    <string name="plantillas_semanas_vacio">No week templates</string>
+    <string name="plantillas_meses_vacio">No month templates</string>
+    <string name="plantilla_nueva_semana">New week template</string>
+    <string name="plantilla_editar_semana">Edit week template</string>
+    <string name="plantilla_nuevo_mes">New month template</string>
+    <string name="plantilla_editar_mes">Edit month template</string>
+    <string name="plantilla_eliminar_titulo">Delete template</string>
+    <string name="plantilla_eliminar_mensaje">\"%1$s\" will be deleted. This action cannot be undone.</string>
+    <string name="plantilla_dias_laborales">%1$d working days</string>
+    <string name="plantilla_semanas_configuradas">%1$d configured weeks</string>
+    <string name="plantilla_semana_default">Default template</string>
+    <string name="plantilla_sin_seleccion">No selection</string>
+    <string name="plantilla_overrides_semana">Per-week overrides</string>
+    <string name="plantilla_semana_libre">Free week</string>
+    <string name="plantilla_usar_base">Use default</string>
+    <string name="plantilla_picker_vacio">No templates available</string>
+    <string name="plantilla_aplicar_semana">Apply week template</string>
+    <string name="plantilla_aplicar_mes">Apply month template</string>
+    <string name="plantilla_elegir_semana">Choose week template</string>
+    <string name="plantilla_elegir_mes">Choose month template</string>
+
+    <string name="plantilla_cambios_semana_mensaje">You changed this week template. Do you want to keep editing or discard the changes?</string>
+    <string name="plantilla_cambios_mes_mensaje">You changed this month template. Do you want to keep editing or discard the changes?</string>
+    <string name="tarifa_descartar_cambios_mensaje">You changed the rate for this month. Do you want to keep editing or discard the changes?</string>
+    <string name="trabajo_descartar_cambios_mensaje">You changed this job. Do you want to keep editing or discard the changes?</string>
+
+    <!-- Conflict dialog when applying templates -->
+    <string name="conflicto_titulo">Existing entries found</string>
+    <string name="conflicto_mensaje_corto">%1$d days already have entries (%2$s). What do you want to do?</string>
+    <string name="conflicto_mensaje_largo">%1$d days already have entries. What do you want to do?</string>
+    <string name="conflicto_reemplazar">Replace all</string>
+    <string name="conflicto_solo_vacios">Only empty days</string>
+
+    <!-- Month: clear month -->
+    <string name="mes_limpiar">Clear month</string>
+    <string name="mes_limpiar_titulo">Clear month</string>
+    <string name="mes_limpiar_mensaje">All hours, extra money and the rate for this month will be deleted. This action cannot be undone.</string>
+
+    <!-- Month: week header -->
+    <string name="mes_semana_encabezado">%1$s → %2$s</string>
+
+    <!-- Contents of the exported documents (PDF and JPEG) -->
+    <string name="export_pie_de_marca">HourFlow — made by RoyPM</string>
+    <string name="export_encabezado">%1$s — %2$s — %3$s %4$d</string>
+    <string name="export_tarifa">Rate: %1$s</string>
+    <string name="export_por_hora">%1$s/hour</string>
+    <string name="export_horas_del_mes">Hours this month</string>
+    <string name="export_total_horas_mes">Total hours this month</string>
+    <string name="export_total_dinero_extra">Total extra money</string>
+    <string name="export_total_a_cobrar">TOTAL TO BE PAID</string>
+    <string name="export_entrada">%1$s (%2$s) %3$s - %4$s</string>
+    <string name="export_tarifa_custom">(%1$s/h)</string>
+    <string name="export_fila_dinero_extra">%1$s  %2$s</string>
+</resources>

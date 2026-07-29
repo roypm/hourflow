@@ -1,0 +1,101 @@
+name: Android
+
+on:
+  push:
+    branches: [main]
+    tags:
+      - "v*"
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Make Gradle executable
+        run: chmod +x gradlew
+
+      - name: Run tests
+        run: ./gradlew test
+
+      - name: Build debug APK
+        run: ./gradlew :app:assembleDebug
+
+      - name: Build release APK
+        run: ./gradlew :app:assembleRelease
+
+      - name: Prepare APK artifacts
+        run: |
+          mkdir -p dist
+          cp app/build/outputs/apk/debug/app-debug.apk dist/hourflow-debug.apk
+          cp app/build/outputs/apk/release/app-release.apk dist/hourflow-release.apk
+
+      - name: Upload APK artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: hourflow-apks-${{ github.run_number }}
+          path: dist/*.apk
+          if-no-files-found: error
+
+      - name: Determine release
+        id: release
+        if: github.event_name == 'push'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          should_release=false
+          release_tag=""
+
+          if [[ "${GITHUB_REF}" == "refs/heads/main" ]]; then
+            version_name=$(sed -n 's/^VERSION_NAME=\(.*\)$/\1/p' gradle.properties | head -n 1)
+            if [[ -z "${version_name}" ]]; then
+              echo "Could not read VERSION_NAME from gradle.properties" >&2
+              exit 1
+            fi
+            release_tag="v${version_name}"
+          elif [[ "${GITHUB_REF}" == refs/tags/v* ]]; then
+            release_tag="${GITHUB_REF_NAME}"
+          fi
+
+          if [[ -n "${release_tag}" ]]; then
+            if gh release view "${release_tag}" >/dev/null 2>&1; then
+              echo "Release ${release_tag} already exists; skipping."
+            else
+              should_release=true
+            fi
+          fi
+
+          echo "should_release=${should_release}" >> "${GITHUB_OUTPUT}"
+          echo "release_tag=${release_tag}" >> "${GITHUB_OUTPUT}"
+
+      - name: Publish GitHub release
+        if: github.event_name == 'push' && steps.release.outputs.should_release == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [[ "${GITHUB_REF}" == refs/tags/v* ]]; then
+            gh release create "${{ steps.release.outputs.release_tag }}" dist/*.apk \
+              --title "HourFlow ${{ steps.release.outputs.release_tag }}" \
+              --notes "Automated APK build for ${{ steps.release.outputs.release_tag }}."
+          else
+            gh release create "${{ steps.release.outputs.release_tag }}" dist/*.apk \
+              --target "${GITHUB_SHA}" \
+              --title "HourFlow ${{ steps.release.outputs.release_tag }}" \
+              --notes "Automated APK build for ${{ steps.release.outputs.release_tag }}."
+          fi

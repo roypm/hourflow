@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Català. `app_name` és un nom propi i es queda a values/ (translatable="false"). -->
+<resources>
+
+    <!-- Accions compartides per tota l\'aplicació -->
+    <string name="accion_guardar">Desa</string>
+    <string name="accion_cancelar">Cancel·la</string>
+    <string name="accion_eliminar">Elimina</string>
+    <string name="accion_editar">Edita</string>
+    <string name="accion_aceptar">D\'acord</string>
+    <string name="accion_volver">Enrere</string>
+    <string name="accion_anadir">+ Afegeix</string>
+    <string name="accion_continuar">Continua</string>
+    <string name="accion_entendido">Entesos</string>
+    <string name="accion_deshacer">Desfés</string>
+    <string name="accion_compartir">Comparteix</string>
+    <string name="accion_seguir_editando">Segueix editant</string>
+    <string name="accion_descartar_cambios">Descarta els canvis</string>
+    <string name="cambios_sin_guardar_titulo">Canvis sense desar</string>
+    <string name="accion_mas_opciones">Més opcions</string>
+
+    <!-- Camps de formulari compartits -->
+    <string name="campo_obligatorio">Camp obligatori</string>
+    <string name="campo_numero_invalido">Introdueix un número vàlid, p. ex. 8,50</string>
+    <string name="campo_fecha">Data</string>
+    <string name="campo_nombre">Nom</string>
+
+    <!-- Pantalla: Les meves feines -->
+    <string name="trabajos_titulo">Les meves feines</string>
+    <string name="trabajos_vacio_titulo">Afegeix la teva primera feina</string>
+    <string name="trabajos_vacio_mensaje">Registra les teves hores i el que guanyes a cada feina. Comença creant-ne la primera.</string>
+    <string name="trabajos_vacio_boton">Crea una feina</string>
+    <string name="trabajo_nuevo">Nova feina</string>
+    <string name="trabajo_editar">Edita la feina</string>
+    <string name="trabajo_anadir">Afegeix una feina</string>
+    <string name="trabajo_mas_opciones">Més opcions de %1$s</string>
+    <string name="trabajo_eliminar_titulo">Elimina la feina</string>
+    <string name="trabajo_eliminar_mensaje">S\'eliminarà \"%1$s\" juntament amb totes les seves hores, tarifes i diners extra registrats. Aquesta acció no es pot desfer.</string>
+    <string name="trabajo_campo_nombre">Nom de la feina</string>
+    <string name="trabajo_campo_tu_nombre">El teu nom</string>
+    <string name="trabajo_campo_moneda">Moneda</string>
+    <string name="trabajo_foto_opcional">Foto opcional</string>
+    <string name="trabajo_elegir_foto">Tria foto</string>
+    <string name="trabajo_cambiar_foto">Canvia</string>
+    <string name="trabajo_quitar_foto">Treu</string>
+    <string name="trabajo_total_horas">Hores totals</string>
+    <string name="trabajo_total_dinero">Diners totals</string>
+    <string name="trabajo_tiempo_real">Temps real</string>
+    <string name="trabajo_meses_actividad">Mesos amb activitat</string>
+    <string name="trabajo_primer_registro">Primer registre</string>
+    <string name="trabajo_ultimo_registro">Últim registre: %1$s</string>
+    <string name="trabajo_sin_registros">Sense registres</string>
+
+    <!-- Monedes -->
+    <string name="moneda_euro">Euro</string>
+    <string name="moneda_dolar">Dòlar</string>
+    <string name="moneda_libra">Lliura</string>
+    <string name="moneda_yen">Ien</string>
+    <string name="moneda_franco">Franc suís</string>
+    <string name="moneda_opcion">%1$s (%2$s)</string>
+
+    <!-- Pantalla: Any -->
+    <string name="anio_hoy">Avui</string>
+    <string name="anio_anterior">Any anterior</string>
+    <string name="anio_siguiente">Any següent</string>
+    <string name="anio_total">%1$s · %2$s</string>
+
+    <!-- Pantalla: Mes -->
+    <string name="mes_titulo">%1$s · %2$s %3$d</string>
+    <string name="mes_ver_resumen">Mostra el resum i exporta</string>
+    <string name="mes_boton_resumen">Resum</string>
+    <string name="mes_tarifa_etiqueta">Tarifa d\'aquest mes</string>
+    <string name="mes_tarifa_valor">%1$s %2$s/hora</string>
+    <string name="mes_tarifa_sin_fijar">sense fixar</string>
+    <string name="mes_dinero_extra_titulo">Diners extra d\'aquest mes</string>
+    <string name="mes_editar_dinero_extra">Edita els diners extra</string>
+    <string name="mes_eliminar_dinero_extra">Elimina els diners extra</string>
+    <string name="mes_eliminar_dinero_extra_titulo">Elimina els diners extra</string>
+    <string name="mes_eliminar_dinero_extra_mensaje">S\'eliminarà \"%1$s\" (%2$s). Aquesta acció es podrà desfer durant uns segons.</string>
+    <string name="mes_dinero_extra_eliminado">Diners extra eliminats</string>
+    <string name="mes_dinero_extra_fila">%1$d/%2$d · %3$s</string>
+    <string name="mes_total_dinero">Total diners: %1$s</string>
+    <string name="mes_total_horas">Total hores: %1$s</string>
+    <string name="mes_dia_encabezado">%1$d (%2$s)</string>
+    <string name="mes_dia_valor">%1$s · %2$s</string>
+    <string name="mes_total_semana">Total setmana</string>
+    <string name="mes_total_semana_parcial">Total setmana (parcial)</string>
+    <string name="mes_semana_resumen">%1$s: %2$s · %3$s</string>
+    <string name="marcador_nocturno">Inclou torn de nit</string>
+    <string name="marcador_tarifa_distinta">Inclou una tarifa diferent de la del mes</string>
+    <string name="marcador_varios_turnos">Inclou %1$d torns aquell dia</string>
+
+    <!-- Diàleg: tarifa del mes -->
+    <string name="tarifa_dialogo_titulo">Tarifa per hora d\'aquest mes</string>
+    <string name="tarifa_campo_precio">Preu per hora (%1$s)</string>
+
+    <!-- Formulari: diners extra -->
+    <string name="dinero_extra_titulo">Diners extra</string>
+    <string name="dinero_extra_campo_cantidad">Quantitat (pot ser negativa)</string>
+    <string name="dinero_extra_campo_descripcion">Descripció (p. ex. repartiment)</string>
+    <string name="dinero_extra_descartar_cambios_mensaje">Has canviat aquests diners extra. Vols seguir editant o descartar els canvis?</string>
+
+    <!-- Formulari: hores del dia -->
+    <string name="entrada_titulo">Hores del %1$s</string>
+    <string name="entrada_anadir_turno">Afegeix un altre torn</string>
+    <string name="entrada_eliminar_titulo">Elimina el torn</string>
+    <string name="entrada_eliminar_mensaje">S\'eliminarà el torn %1$s. Aquesta acció es podrà desfer durant uns segons.</string>
+    <string name="entrada_descartar_cambios_mensaje">Has canviat aquest torn. Vols seguir editant o descartar els canvis?</string>
+    <string name="entrada_turno_eliminado">Torn eliminat</string>
+    <string name="entrada_rango_horas">%1$s - %2$s</string>
+    <string name="entrada_sufijo_dia_siguiente">(+1 dia)</string>
+    <string name="entrada_hora_entrada">Entrada</string>
+    <string name="entrada_hora_salida">Sortida</string>
+    <string name="entrada_turno_nocturno">Torn de nit</string>
+    <string name="entrada_que_es_nocturno">Què vol dir torn de nit</string>
+    <string name="entrada_error_horario">L\'hora de sortida no pot ser anterior a la d\'entrada, tret que sigui un torn de nit</string>
+    <string name="entrada_error_solapa">Aquest torn se superposa amb un altre ja registrat aquell dia</string>
+    <string name="entrada_campo_nota">Nota</string>
+    <string name="entrada_anadir_nota">+ Afegeix una nota</string>
+    <string name="entrada_tarifa_distinta">Tarifa diferent per a aquest torn</string>
+    <string name="entrada_tarifa_turno">Tarifa d\'aquest torn: %1$s %2$s/hora</string>
+    <string name="entrada_nocturno_explicacion">Activa-ho si el torn creua la mitjanit. Exemple: entres a les 22:00 i surts a les 06:00 — l\'hora de sortida es compta com del dia següent.</string>
+
+    <!-- Pantalla: Configuració -->
+    <string name="ajustes_titulo">Configuració</string>
+    <string name="ajustes_tema">Tema</string>
+    <string name="tema_sistema">Sistema</string>
+    <string name="tema_claro">Clar</string>
+    <string name="tema_oscuro">Fosc</string>
+    <string name="ajustes_idioma">Idioma</string>
+    <string name="idioma_sistema">Sistema</string>
+    <string name="idioma_espanol">Espanyol</string>
+    <string name="idioma_ingles">Anglès</string>
+    <string name="idioma_catalan">Català</string>
+    <string name="ajustes_backup">Còpia de seguretat</string>
+    <string name="ajustes_backup_descripcion">Exporta les teves feines, hores i tarifes a un fitxer, o restaura\'n una.</string>
+    <string name="ajustes_exportar_backup">Exporta la còpia (JSON)</string>
+    <string name="ajustes_importar_backup">Importa una còpia (JSON)</string>
+    <string name="ajustes_importar_titulo">Importa una còpia</string>
+    <string name="ajustes_importar_mensaje">Les feines del fitxer s\'afegiran com a feines noves. Les teves feines actuals no se sobreescriuran ni s\'eliminaran.</string>
+    <string name="ajustes_backup_importado">Còpia importada correctament.</string>
+    <string name="ajustes_error_exportar">No s\'ha pogut exportar la còpia.</string>
+    <string name="ajustes_error_importar">No s\'ha pogut importar la còpia: el fitxer no és vàlid.</string>
+    <string name="ajustes_error_leer">No s\'ha pogut llegir el fitxer seleccionat.</string>
+
+    <!-- Pantalla: Resum -->
+    <string name="resumen_titulo">Resum</string>
+    <string name="resumen_exportar_pdf">Exporta a PDF</string>
+    <string name="resumen_exportar_jpeg">Exporta a JPEG</string>
+    <string name="resumen_error_exportar">No s\'ha pogut generar el fitxer. Torna-ho a provar.</string>
+
+    <!-- Plantilles de setmana i mes -->
+    <string name="plantillas_titulo">Plantilles</string>
+    <string name="plantillas_tab_semanas">Setmanes</string>
+    <string name="plantillas_tab_meses">Mesos</string>
+    <string name="plantillas_semanas_vacio">No hi ha plantilles de setmana</string>
+    <string name="plantillas_meses_vacio">No hi ha plantilles de mes</string>
+    <string name="plantilla_nueva_semana">Nova plantilla de setmana</string>
+    <string name="plantilla_editar_semana">Edita la plantilla de setmana</string>
+    <string name="plantilla_nuevo_mes">Nova plantilla de mes</string>
+    <string name="plantilla_editar_mes">Edita la plantilla de mes</string>
+    <string name="plantilla_eliminar_titulo">Elimina la plantilla</string>
+    <string name="plantilla_eliminar_mensaje">S\'eliminarà \"%1$s\". Aquesta acció no es pot desfer.</string>
+    <string name="plantilla_dias_laborales">%1$d dies laborables</string>
+    <string name="plantilla_semanas_configuradas">%1$d setmanes configurades</string>
+    <string name="plantilla_semana_default">Plantilla base</string>
+    <string name="plantilla_sin_seleccion">Sense selecció</string>
+    <string name="plantilla_overrides_semana">Personalització per setmana</string>
+    <string name="plantilla_semana_libre">Setmana lliure</string>
+    <string name="plantilla_usar_base">Usa la base</string>
+    <string name="plantilla_picker_vacio">No hi ha plantilles disponibles</string>
+    <string name="plantilla_aplicar_semana">Aplica la plantilla de setmana</string>
+    <string name="plantilla_aplicar_mes">Aplica la plantilla de mes</string>
+    <string name="plantilla_elegir_semana">Tria la plantilla de setmana</string>
+    <string name="plantilla_elegir_mes">Tria la plantilla de mes</string>
+
+    <string name="plantilla_cambios_semana_mensaje">Has canviat aquesta plantilla de setmana. Vols seguir editant o descartar els canvis?</string>
+    <string name="plantilla_cambios_mes_mensaje">Has canviat aquesta plantilla de mes. Vols seguir editant o descartar els canvis?</string>
+    <string name="tarifa_descartar_cambios_mensaje">Has canviat la tarifa d\'aquest mes. Vols seguir editant o descartar els canvis?</string>
+    <string name="trabajo_descartar_cambios_mensaje">Has canviat aquesta feina. Vols seguir editant o descartar els canvis?</string>
+
+    <!-- Diàleg de conflicte en aplicar plantilles -->
+    <string name="conflicto_titulo">Hi ha entrades existents</string>
+    <string name="conflicto_mensaje_corto">%1$d dies ja tenen entrades registrades (%2$s). Què vols fer?</string>
+    <string name="conflicto_mensaje_largo">%1$d dies ja tenen entrades registrades. Què vols fer?</string>
+    <string name="conflicto_reemplazar">Reemplaça-ho tot</string>
+    <string name="conflicto_solo_vacios">Només dies buits</string>
+
+    <!-- Mes: netejar mes -->
+    <string name="mes_limpiar">Netejar mes</string>
+    <string name="mes_limpiar_titulo">Netejar mes</string>
+    <string name="mes_limpiar_mensaje">S\'eliminaran totes les hores, diners extra i la tarifa d\'aquest mes. Aquesta acció no es pot desfer.</string>
+
+    <!-- Mes: capçalera de setmana -->
+    <string name="mes_semana_encabezado">%1$s → %2$s</string>
+
+    <!-- Contingut dels documents exportats (PDF i JPEG) -->
+    <string name="export_pie_de_marca">HourFlow — fet per RoyPM</string>
+    <string name="export_encabezado">%1$s — %2$s — %3$s %4$d</string>
+    <string name="export_tarifa">Tarifa: %1$s</string>
+    <string name="export_por_hora">%1$s/hora</string>
+    <string name="export_horas_del_mes">Hores del mes</string>
+    <string name="export_total_horas_mes">Total d\'hores del mes</string>
+    <string name="export_total_dinero_extra">Total de diners extra</string>
+    <string name="export_total_a_cobrar">TOTAL A COBRAR</string>
+    <string name="export_entrada">%1$s (%2$s) %3$s - %4$s</string>
+    <string name="export_tarifa_custom">(%1$s/h)</string>
+    <string name="export_fila_dinero_extra">%1$s  %2$s</string>
+</resources>
