@@ -1,11 +1,14 @@
 package com.horastrabajo.app.ui.plantillas
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -15,6 +18,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -23,6 +27,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -51,6 +56,7 @@ fun PlantillaMesFormSheet(
             plantillaExistente?.overridesPorSemana ?: emptyMap()
         )
     }
+    var semanaEditando by remember { mutableStateOf<Int?>(null) }
     val esValido = nombre.isNotBlank()
     val defaultIdInicial = remember { plantillaExistente?.plantillaSemanaDefault?.id }
     val overridesInicial = remember { plantillaExistente?.overridesPorSemana ?: emptyMap() }
@@ -92,18 +98,16 @@ fun PlantillaMesFormSheet(
         Text(stringResource(R.string.plantilla_overrides_semana), style = MaterialTheme.typography.titleSmall)
 
         (1..6).forEach { semanaDelMes ->
-            OverrideRow(
+            val override = overrides[semanaDelMes]
+            val textoActual = when {
+                override == null || defaultId != null && override.id == defaultId -> stringResource(R.string.plantilla_usar_base)
+                override.id == -1L -> stringResource(R.string.plantilla_semana_libre)
+                else -> override.nombre
+            }
+            OverrideRowCompacto(
                 semanaDelMes = semanaDelMes,
-                plantillasDisponibles = plantillasSemanaDisponibles,
-                overrideActual = overrides[semanaDelMes],
-                esDefaultNull = defaultId == null,
-                onCambio = { nuevaPlantilla ->
-                    overrides = if (nuevaPlantilla != null) {
-                        overrides + (semanaDelMes to nuevaPlantilla)
-                    } else {
-                        overrides - semanaDelMes
-                    }
-                },
+                textoActual = textoActual,
+                onClick = { semanaEditando = semanaDelMes },
             )
         }
 
@@ -131,6 +135,28 @@ fun PlantillaMesFormSheet(
                 if (hayCambios) confirmarDescartarCambios = true else onCancelar()
             }) { Text(stringResource(R.string.accion_cancelar)) }
         }
+    }
+
+    if (semanaEditando != null) {
+        val semana = semanaEditando!!
+        OverrideDialog(
+            semanaDelMes = semana,
+            plantillasDisponibles = plantillasSemanaDisponibles,
+            seleccionado = overrides.let {
+                val sel = it[semana]
+                if (sel != null && defaultId != null && sel.id == defaultId) null else sel
+            },
+            defaultId = defaultId,
+            onSeleccionar = { nuevaPlantilla ->
+                overrides = if (nuevaPlantilla != null) {
+                    overrides + (semana to nuevaPlantilla)
+                } else {
+                    overrides - semana
+                }
+                semanaEditando = null
+            },
+            onDismiss = { semanaEditando = null },
+        )
     }
 
     if (confirmarDescartarCambios) {
@@ -193,60 +219,87 @@ private fun SelectorPlantillaSemana(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun OverrideRow(
+private fun OverrideRowCompacto(
+    semanaDelMes: Int,
+    textoActual: String,
+    onClick: () -> Unit,
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick)
+            .padding(vertical = 10.dp, horizontal = 4.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text(
+            stringResource(R.string.plantilla_semana_numero, semanaDelMes),
+            style = MaterialTheme.typography.bodyLarge,
+        )
+        Text(
+            textoActual,
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+    }
+}
+
+@Composable
+private fun OverrideDialog(
     semanaDelMes: Int,
     plantillasDisponibles: List<PlantillaSemana>,
-    overrideActual: PlantillaSemana?,
-    esDefaultNull: Boolean,
-    onCambio: (PlantillaSemana?) -> Unit,
+    seleccionado: PlantillaSemana?,
+    defaultId: Long?,
+    onSeleccionar: (PlantillaSemana?) -> Unit,
+    onDismiss: () -> Unit,
 ) {
-    var expandido by remember { mutableStateOf(false) }
-
     val opciones = buildList {
-        if (esDefaultNull) add(Pair("Usar base (default)", null))
-        else add(Pair("Usar base", null))
-        add(Pair("Semana libre", PlantillaSemana(-1, -1, "", "", emptyList())))
-        addAll(plantillasDisponibles.map { Pair(it.nombre, it) })
+        add(Pair(stringResource(R.string.plantilla_usar_base), null as PlantillaSemana?))
+        add(Pair(stringResource(R.string.plantilla_semana_libre), PlantillaSemana(-1, -1, "", "", emptyList())))
+        addAll(plantillasDisponibles.filter { it.id != defaultId }.map { Pair(it.nombre, it) })
     }
 
-    ExposedDropdownMenuBox(
-        expanded = expandido,
-        onExpandedChange = { expandido = it },
-    ) {
-        val textoActual = when {
-            overrideActual == null && plantillasDisponibles.none { it.id == -1L } -> stringResource(R.string.plantilla_semana_libre)
-            overrideActual != null && overrideActual.id == -1L -> stringResource(R.string.plantilla_semana_libre)
-            overrideActual != null -> overrideActual.nombre
-            else -> stringResource(R.string.plantilla_usar_base)
-        }
-        OutlinedTextField(
-            value = textoActual,
-            onValueChange = {},
-            readOnly = true,
-            label = { Text("Semana $semanaDelMes") },
-            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandido) },
-            modifier = Modifier.fillMaxWidth().menuAnchor(MenuAnchorType.PrimaryNotEditable),
-        )
-        ExposedDropdownMenu(expanded = expandido, onDismissRequest = { expandido = false }) {
-            DropdownMenuItem(
-                text = { Text(stringResource(R.string.plantilla_usar_base)) },
-                onClick = { onCambio(null); expandido = false },
-            )
-            DropdownMenuItem(
-                text = { Text(stringResource(R.string.plantilla_semana_libre)) },
-                onClick = {
-                    onCambio(PlantillaSemana(-1, -1, "", "", emptyList()))
-                    expandido = false
-                },
-            )
-            plantillasDisponibles.forEach { ps ->
-                DropdownMenuItem(
-                    text = { Text(ps.nombre) },
-                    onClick = { onCambio(ps); expandido = false },
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(R.string.plantilla_semana_numero, semanaDelMes)) },
+        text = {
+            Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+                Text(
+                    stringResource(R.string.plantilla_elegir_semana),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(bottom = 8.dp),
                 )
+                opciones.forEach { (label, plantilla) ->
+                    val esSeleccionado = when {
+                        plantilla == null && seleccionado == null -> true
+                        plantilla?.id == -1L && seleccionado?.id == -1L -> true
+                        seleccionado != null && plantilla?.id ?: -2L == seleccionado.id -> true
+                        else -> false
+                    }
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { onSeleccionar(plantilla) }
+                            .padding(vertical = 8.dp, horizontal = 4.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        RadioButton(
+                            selected = esSeleccionado,
+                            onClick = { onSeleccionar(plantilla) },
+                        )
+                        Text(
+                            label,
+                            style = MaterialTheme.typography.bodyLarge,
+                            modifier = Modifier.padding(start = 8.dp),
+                        )
+                    }
+                }
             }
-        }
-    }
+        },
+        confirmButton = {
+            TextButton(onClick = onDismiss) { Text(stringResource(R.string.accion_cancelar)) }
+        },
+    )
 }

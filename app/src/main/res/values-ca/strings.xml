@@ -168,6 +168,7 @@
     <string name="plantilla_overrides_semana">Personalització per setmana</string>
     <string name="plantilla_semana_libre">Setmana lliure</string>
     <string name="plantilla_usar_base">Usa la base</string>
+    <string name="plantilla_semana_numero">Setmana %1$d</string>
     <string name="plantilla_picker_vacio">No hi ha plantilles disponibles</string>
     <string name="plantilla_aplicar_semana">Aplica la plantilla de setmana</string>
     <string name="plantilla_aplicar_mes">Aplica la plantilla de mes</string>

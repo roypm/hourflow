@@ -104,6 +104,7 @@ class MesViewModel(
     ) = viewModelScope.launch {
         val p = parametros.value ?: return@launch
         val aGenerar = GeneradorEntradas.generarSemana(plantilla, primerDiaSemana, p.trabajoId)
+            .filter { it.fecha.monthValue == p.mes && it.fecha.year == p.anio }
         val existentes = entradaHorasRepository.getEntradasSemana(primerDiaSemana, p.trabajoId)
         val conflictos = GeneradorEntradas.detectarConflictos(aGenerar, existentes)
 

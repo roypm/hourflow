@@ -168,6 +168,7 @@
     <string name="plantilla_overrides_semana">Per-week overrides</string>
     <string name="plantilla_semana_libre">Free week</string>
     <string name="plantilla_usar_base">Use default</string>
+    <string name="plantilla_semana_numero">Week %1$d</string>
     <string name="plantilla_picker_vacio">No templates available</string>
     <string name="plantilla_aplicar_semana">Apply week template</string>
     <string name="plantilla_aplicar_mes">Apply month template</string>

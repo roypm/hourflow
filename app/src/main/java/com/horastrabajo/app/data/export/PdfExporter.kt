@@ -1,70 +1,61 @@
 package com.horastrabajo.app.data.export
 
-import android.graphics.Color
-import android.graphics.Paint
+import android.content.Context
 import android.graphics.pdf.PdfDocument
+import com.horastrabajo.app.domain.ResumenMensual
 import java.io.File
 import java.io.FileOutputStream
 
 private const val ANCHO_A4 = 595
 private const val ALTO_A4 = 842
-private const val MARGEN = 40f
-private const val ALTURA_LINEA = 18f
-private const val ALTURA_LINEA_TITULO = 26f
-private const val Y_PIE_DE_PAGINA = ALTO_A4 - 20f
 
 object PdfExporter {
 
-    /** [filas] y [pieDeMarca] llegan ya traducidos desde la UI (ver `construirFilasResumen`). */
-    fun exportar(filas: List<FilaResumen>, pieDeMarca: String, archivoDestino: File) {
-        val documento = PdfDocument()
+    private val estiloA4 = EstiloRender(
+        ancho = ANCHO_A4,
+        altoPagina = ALTO_A4,
+        margen = 40f,
+        alturaLinea = 32f,
+        alturaLineaTitulo = 36f,
+        textSizeTitulo = 15f,
+        textSizeNormal = 10f,
+        textSizePequena = 8f,
+    )
 
-        val paintNormal = Paint().apply { textSize = 11f }
-        val paintNegrita = Paint().apply { textSize = 11f; isFakeBoldText = true }
-        val paintTitulo = Paint().apply { textSize = 15f; isFakeBoldText = true }
-        val paintPie = Paint().apply { textSize = 8f; color = Color.GRAY }
+    /** Exporta el resumen con formato tabla profesional. */
+    fun exportarResumen(
+        context: Context,
+        resumen: ResumenMensual,
+        pieDeMarca: String,
+        archivoDestino: File,
+    ) {
+        val documento = PdfDocument()
+        val logo = cargarBitmapLogo(context, resumen.trabajo.fotoUri, 55f, 55f)
 
         var pagina: PdfDocument.Page? = null
-        var canvas: android.graphics.Canvas? = null
-        var y = ALTO_A4.toFloat()
-        var numeroPagina = 0
 
-        fun finalizarPaginaActual() {
-            val paginaActual = pagina ?: return
-            canvas?.drawText(pieDeMarca, MARGEN, Y_PIE_DE_PAGINA, paintPie)
-            documento.finishPage(paginaActual)
-        }
-
-        fun nuevaPagina() {
-            finalizarPaginaActual()
-            numeroPagina++
-            val info = PdfDocument.PageInfo.Builder(ANCHO_A4, ALTO_A4, numeroPagina).create()
+        val onNuevaPagina = {
+            pagina?.let { documento.finishPage(it) }
+            val numPag = (pagina?.info?.pageNumber ?: 0) + 1
+            val info = PdfDocument.PageInfo.Builder(ANCHO_A4, ALTO_A4, numPag).create()
             pagina = documento.startPage(info)
-            canvas = pagina!!.canvas
-            y = MARGEN + ALTURA_LINEA
+            pagina!!.canvas
         }
 
-        nuevaPagina()
+        // Primera página
+        onNuevaPagina()
 
-        for (fila in filas) {
-            val alturaFila = if (fila.estilo == EstiloFila.TITULO) ALTURA_LINEA_TITULO else ALTURA_LINEA
-            if (y + alturaFila > ALTO_A4 - MARGEN) {
-                nuevaPagina()
-            }
-            val paint = when (fila.estilo) {
-                EstiloFila.TITULO -> paintTitulo
-                EstiloFila.NEGRITA -> paintNegrita
-                EstiloFila.NORMAL -> paintNormal
-            }
-            canvas?.drawText(fila.izquierda, MARGEN, y, paint)
-            if (fila.derecha.isNotEmpty()) {
-                val anchoTexto = paint.measureText(fila.derecha)
-                canvas?.drawText(fila.derecha, ANCHO_A4 - MARGEN - anchoTexto, y, paint)
-            }
-            y += alturaFila
-        }
+        RenderizadorResumen.dibujar(
+            canvas = pagina!!.canvas,
+            resumen = resumen,
+            logo = logo,
+            pieDeMarca = pieDeMarca,
+            estilo = estiloA4,
+            onNuevaPagina = onNuevaPagina,
+        )
 
-        finalizarPaginaActual()
+        pagina?.let { documento.finishPage(it) }
+        logo?.recycle()
 
         FileOutputStream(archivoDestino).use { documento.writeTo(it) }
         documento.close()
