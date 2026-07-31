@@ -148,6 +148,10 @@
     <string name="resumen_exportar_pdf">Export PDF</string>
     <string name="resumen_exportar_jpeg">Export JPEG</string>
     <string name="resumen_error_exportar">The file could not be generated. Please try again.</string>
+    <string name="resumen_pdf_subtitulo">Detailed report: notes, night shifts, special rates, extra money and logo</string>
+    <string name="resumen_jpeg_subtitulo">Basic summary to share</string>
+    <string name="resumen_total_a_cobrar">Total to collect: %1$s</string>
+    <string name="resumen_vacio">No records this month</string>
 
     <!-- Week and month templates -->
     <string name="plantillas_titulo">Templates</string>
@@ -207,4 +211,10 @@
     <string name="export_entrada">%1$s (%2$s) %3$s - %4$s</string>
     <string name="export_tarifa_custom">(%1$s/h)</string>
     <string name="export_fila_dinero_extra">%1$s  %2$s</string>
+    <string name="export_seccion_dinero_extra">Extra money</string>
+    <string name="export_total_dinero_turnos">Money from shifts:</string>
+    <string name="export_dinero_extra_mes">Extra money this month:</string>
+    <string name="export_total_horas">Total hours:</string>
+    <string name="export_nocturno">Night</string>
+    <string name="export_pagina">Page %1$d of %2$d</string>
 </resources>

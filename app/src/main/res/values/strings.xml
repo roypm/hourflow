@@ -153,6 +153,10 @@
     <string name="resumen_exportar_pdf">Exportar PDF</string>
     <string name="resumen_exportar_jpeg">Exportar JPEG</string>
     <string name="resumen_error_exportar">No se pudo generar el archivo. Inténtalo de nuevo.</string>
+    <string name="resumen_pdf_subtitulo">Informe detallado: notas, turnos nocturnos, tarifas especiales, dinero extra y logo</string>
+    <string name="resumen_jpeg_subtitulo">Resumen básico para compartir</string>
+    <string name="resumen_total_a_cobrar">Total a cobrar: %1$s</string>
+    <string name="resumen_vacio">No hay registros este mes</string>
 
     <!-- Plantillas de semana y mes -->
     <string name="plantillas_titulo">Plantillas</string>
@@ -212,4 +216,10 @@
     <string name="export_entrada">%1$s (%2$s) %3$s - %4$s</string>
     <string name="export_tarifa_custom">(%1$s/h)</string>
     <string name="export_fila_dinero_extra">%1$s  %2$s</string>
+    <string name="export_seccion_dinero_extra">Dinero extra</string>
+    <string name="export_total_dinero_turnos">Dinero de los turnos:</string>
+    <string name="export_dinero_extra_mes">Dinero extra este mes:</string>
+    <string name="export_total_horas">Total horas:</string>
+    <string name="export_nocturno">Nocturno</string>
+    <string name="export_pagina">Página %1$d de %2$d</string>
 </resources>

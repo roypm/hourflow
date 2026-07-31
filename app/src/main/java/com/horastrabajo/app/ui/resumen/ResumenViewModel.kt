@@ -6,6 +6,7 @@ import com.horastrabajo.app.data.repository.TarifaMensualRepository
 import com.horastrabajo.app.data.repository.TrabajoRepository
 import com.horastrabajo.app.ui.BaseResumenViewModel
 
+/** Carga el [ResumenMensual] del período y lo expone para la pantalla y los exports. */
 class ResumenViewModel(
     trabajoRepository: TrabajoRepository,
     entradaHorasRepository: EntradaHorasRepository,

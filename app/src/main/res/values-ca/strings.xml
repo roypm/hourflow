@@ -148,6 +148,10 @@
     <string name="resumen_exportar_pdf">Exporta a PDF</string>
     <string name="resumen_exportar_jpeg">Exporta a JPEG</string>
     <string name="resumen_error_exportar">No s\'ha pogut generar el fitxer. Torna-ho a provar.</string>
+    <string name="resumen_pdf_subtitulo">Informe detallat: notes, torns nocturns, tarifes especials, diners extra i logo</string>
+    <string name="resumen_jpeg_subtitulo">Resum bàsic per compartir</string>
+    <string name="resumen_total_a_cobrar">Total a cobrar: %1$s</string>
+    <string name="resumen_vacio">No hi ha registres aquest mes</string>
 
     <!-- Plantilles de setmana i mes -->
     <string name="plantillas_titulo">Plantilles</string>
@@ -207,4 +211,10 @@
     <string name="export_entrada">%1$s (%2$s) %3$s - %4$s</string>
     <string name="export_tarifa_custom">(%1$s/h)</string>
     <string name="export_fila_dinero_extra">%1$s  %2$s</string>
+    <string name="export_seccion_dinero_extra">Diners extra</string>
+    <string name="export_total_dinero_turnos">Diners dels torns:</string>
+    <string name="export_dinero_extra_mes">Diners extra aquest mes:</string>
+    <string name="export_total_horas">Total hores:</string>
+    <string name="export_nocturno">Nocturn</string>
+    <string name="export_pagina">Pàgina %1$d de %2$d</string>
 </resources>
