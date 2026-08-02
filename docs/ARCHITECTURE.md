@@ -54,6 +54,15 @@ Additional money entry for a job and month.
 - Stores amount, description, and date.
 - Amounts may be positive or negative.
 
+### Plantillas
+
+Reusable scheduling definitions for recurring work patterns.
+
+- `PlantillaSemana` stores seven weekday configurations, including start/end times and overnight shifts.
+- `PlantillaMes` can select a weekly base template and override individual weeks or mark them as free.
+- Both template types support an optional user description.
+- Template data is local to each job and is included in JSON backups.
+
 ## Export Strategy
 
 | Format | Purpose | Reimportable |
@@ -61,6 +70,10 @@ Additional money entry for a job and month.
 | JSON | Full backup and restore | Yes |
 | PDF | Formal printable monthly summary | No |
 | JPEG | Fast sharing preview | No |
+
+JSON backups currently use schema version 4. They include jobs, shifts, monthly rates, extra money, weekly templates, monthly templates, notes, and custom shift rates. Importing older backup versions remains supported through default fields and compatibility handling. A future incompatible change must add an explicit migration rather than silently changing the existing schema.
+
+PDF and JPEG summaries are named with the period first, followed by the job and worker, for example `2026-08_Restaurante_Joan.pdf` and `2026-08_Restaurante_Joan.jpg`.
 
 Exports are per job. The app does not combine data from different jobs.
 
@@ -89,13 +102,13 @@ The project uses the Gradle Wrapper:
 ./gradlew test
 ```
 
-Release signing uses a local `keystore.properties` file when present. The file is intentionally ignored and not part of the public repository.
+Release signing uses a local `keystore.properties` file when present. The file is intentionally ignored and not part of the public repository. Without it, release builds fall back to debug signing; users should export a JSON backup before installing a new APK because a CI runner may use a different debug key.
 
 ## CI And Releases
 
-GitHub Actions validates pushes and pull requests by running unit tests and building debug and release APKs.
+GitHub Actions validates pushes and pull requests by running unit tests and building a debug validation APK. A tagged release builds the release APK.
 
-Each run uploads the generated APKs as workflow artifacts. Pushes to `main` read `VERSION_NAME` from `gradle.properties` and publish a GitHub Release automatically when that version tag does not already exist. Version tags that start with `v`, such as `v1.3.0`, can also publish a release manually.
+Validation runs upload a debug APK artifact. Version tags that start with `v`, such as `v1.3.0`, validate that the tag matches `VERSION_NAME`, build one versioned release APK, generate a SHA-256 checksum, and publish the GitHub Release automatically. See [RELEASING.md](../RELEASING.md) for the full process.
 
 Release version changes are handled through Gradle tasks:
 

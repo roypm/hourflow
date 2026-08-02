@@ -9,7 +9,7 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class BackupDto(
-    val version: Int = 3,
+    val version: Int = 4,
     val trabajos: List<TrabajoDto>,
 )
 
@@ -23,6 +23,40 @@ data class TrabajoDto(
     val entradas: List<EntradaHorasDto>,
     val tarifas: List<TarifaMensualDto>,
     val dineroExtra: List<DineroExtraDto>,
+    val plantillasSemana: List<PlantillaSemanaDto> = emptyList(),
+    val plantillasMes: List<PlantillaMesDto> = emptyList(),
+)
+
+@Serializable
+data class PlantillaSemanaDto(
+    val id: Long,
+    val nombre: String,
+    val descripcion: String = "",
+    val dias: List<PlantillaDiaDto> = emptyList(),
+)
+
+@Serializable
+data class PlantillaDiaDto(
+    val diaSemana: Int,
+    val horaEntrada: String? = null,
+    val horaSalida: String? = null,
+    val esDiaSiguiente: Boolean = false,
+)
+
+@Serializable
+data class PlantillaMesDto(
+    val id: Long,
+    val nombre: String,
+    val descripcion: String = "",
+    val plantillaSemanaDefaultId: Long? = null,
+    val overrides: List<PlantillaMesOverrideDto> = emptyList(),
+)
+
+@Serializable
+data class PlantillaMesOverrideDto(
+    val semanaDelMes: Int,
+    val plantillaSemanaId: Long? = null,
+    val esSemanaLibre: Boolean = false,
 )
 
 @Serializable

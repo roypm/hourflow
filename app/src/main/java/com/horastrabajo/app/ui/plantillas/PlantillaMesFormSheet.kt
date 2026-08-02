@@ -47,7 +47,9 @@ fun PlantillaMesFormSheet(
     onDirtyChange: (Boolean) -> Unit = {},
 ) {
     var nombre by remember { mutableStateOf(plantillaExistente?.nombre ?: "") }
+    var descripcion by remember { mutableStateOf(plantillaExistente?.descripcion ?: "") }
     val nombreInicial = remember { plantillaExistente?.nombre ?: "" }
+    val descripcionInicial = remember { plantillaExistente?.descripcion ?: "" }
     var mostrarErrores by remember { mutableStateOf(false) }
     var confirmarDescartarCambios by remember { mutableStateOf(false) }
     var defaultId by remember { mutableStateOf(plantillaExistente?.plantillaSemanaDefault?.id) }
@@ -60,7 +62,7 @@ fun PlantillaMesFormSheet(
     val esValido = nombre.isNotBlank()
     val defaultIdInicial = remember { plantillaExistente?.plantillaSemanaDefault?.id }
     val overridesInicial = remember { plantillaExistente?.overridesPorSemana ?: emptyMap() }
-    val hayCambios = plantillaExistente != null && (nombre != nombreInicial || defaultId != defaultIdInicial || overrides != overridesInicial)
+    val hayCambios = plantillaExistente != null && (nombre != nombreInicial || descripcion != descripcionInicial || defaultId != defaultIdInicial || overrides != overridesInicial)
 
     LaunchedEffect(hayCambios) {
         onDirtyChange(hayCambios)
@@ -84,6 +86,15 @@ fun PlantillaMesFormSheet(
             texto = nombre,
             onTextoChange = { nombre = it },
             mostrarErrores = mostrarErrores,
+        )
+
+        OutlinedTextField(
+            value = descripcion,
+            onValueChange = { descripcion = it },
+            label = { Text(stringResource(R.string.plantilla_descripcion)) },
+            modifier = Modifier.fillMaxWidth(),
+            minLines = 2,
+            maxLines = 3,
         )
 
         SelectorPlantillaSemana(
@@ -122,7 +133,7 @@ fun PlantillaMesFormSheet(
                             id = plantillaExistente?.id ?: 0L,
                             trabajoId = trabajoId,
                             nombre = nombre.trim(),
-                            descripcion = "",
+                            descripcion = descripcion.trim(),
                             plantillaSemanaDefault = defaultPlantilla,
                             overridesPorSemana = overrides,
                         )

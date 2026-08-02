@@ -23,6 +23,14 @@ data class Etiquetas(
     val nocturno: String,
     val tarifaCustom: String,
     val pagina: String,
+    val columnaFecha: String,
+    val columnaDia: String,
+    val columnaHorario: String,
+    val columnaDetalles: String,
+    val columnaHoras: String,
+    val columnaDinero: String,
+    val columnaConcepto: String,
+    val columnaImporte: String,
 )
 
 /** Construye las etiquetas para el resumen dado. La tarifa muestra 0 si no está configurada. */
@@ -46,5 +54,13 @@ fun etiquetasExport(recursos: Resources, resumen: ResumenMensual): Etiquetas {
         nocturno = recursos.getString(R.string.export_nocturno),
         tarifaCustom = recursos.getString(R.string.export_tarifa_custom),
         pagina = recursos.getString(R.string.export_pagina),
+        columnaFecha = recursos.getString(R.string.export_columna_fecha),
+        columnaDia = recursos.getString(R.string.export_columna_dia),
+        columnaHorario = recursos.getString(R.string.export_columna_horario),
+        columnaDetalles = recursos.getString(R.string.export_columna_detalles),
+        columnaHoras = recursos.getString(R.string.export_columna_horas),
+        columnaDinero = recursos.getString(R.string.export_columna_dinero),
+        columnaConcepto = recursos.getString(R.string.export_columna_concepto),
+        columnaImporte = recursos.getString(R.string.export_columna_importe),
     )
 }

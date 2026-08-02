@@ -31,6 +31,7 @@ This document summarizes the engineering practices used in HourFlow and the stan
 
 - Add unit tests for domain calculations and import/export behavior.
 - Keep backup/restore tests focused on round-trip safety and backward compatibility.
+- Increase the JSON backup schema version when adding persisted export fields, and keep older versions importable whenever possible.
 - Run the full local validation before release:
 
 ```bash
@@ -60,7 +61,11 @@ On Windows:
 
 - `VERSION_CODE` must always increase for a release.
 - `VERSION_NAME` uses `MAJOR.MINOR.PATCH`.
-- GitHub Actions creates the release automatically when a new `VERSION_NAME` reaches `main`.
+- Pushes to `main` and pull requests run tests and build a validation APK artifact.
+- GitHub Actions creates a GitHub Release only when a matching `v*` tag is pushed.
+- The tag must match `VERSION_NAME`; for example, `VERSION_NAME=1.1.0` requires `v1.1.0`.
+- The tagged workflow publishes one versioned APK and `SHA256SUMS.txt` with backup instructions.
+- The complete automatic and manual publication checklist lives in [RELEASING.md](../RELEASING.md).
 
 ## Files That Must Stay Private
 

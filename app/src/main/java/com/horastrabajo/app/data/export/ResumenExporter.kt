@@ -2,30 +2,24 @@ package com.horastrabajo.app.data.export
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Color
-import android.graphics.Paint
 import android.graphics.pdf.PdfDocument
+import android.net.Uri
 import java.io.File
 import java.io.FileOutputStream
+import kotlin.math.ceil
 
 /**
- * Exportadores de resumen. Contenido provisional: solo un texto "TEST" centrado,
- * mientras se rediseña el documento definitivo.
- *
- * Contrato de tamaños (fijos, no flexibles):
- * - El PDF es siempre una sola página A4 (595×842 pt). Nunca se generan dos páginas:
- *   si el contenido desborda, el renderizador deberá escalarlo o compactarlo.
- * - El JPG es siempre una imagen A4 a 150 dpi (1240×1754 px), sin variar de tamaño.
+ * Punto de entrada Android para los dos formatos de resumen.
  */
 object ResumenExporter {
 
-    fun exportarPdf(archivoDestino: File) {
+    fun exportarPdf(contexto: Context, archivoDestino: File, resumen: com.horastrabajo.app.domain.ResumenMensual, etiquetas: Etiquetas, locale: java.util.Locale) {
         val documento = PdfDocument()
-        val pagina = documento.startPage(PdfDocument.PageInfo.Builder(
-            TamanosDocumento.PDF_ANCHO_PT, TamanosDocumento.PDF_ALTO_PT, 1).create())
-        dibujarTest(pagina.canvas, TamanosDocumento.PDF_ANCHO_PT, TamanosDocumento.PDF_ALTO_PT)
-        documento.finishPage(pagina)
+        val logo = cargarLogo(contexto, resumen.trabajo.fotoUri)
+        PdfRenderer.exportar(documento, resumen, etiquetas, locale, logo)
         FileOutputStream(archivoDestino).use { documento.writeTo(it) }
         documento.close()
     }
@@ -36,39 +30,47 @@ object ResumenExporter {
         etiquetas: Etiquetas,
         locale: java.util.Locale,
     ) {
-        val bitmap = Bitmap.createBitmap(
-            TamanosDocumento.JPG_ANCHO_PX, TamanosDocumento.JPG_ALTO_PX, Bitmap.Config.ARGB_8888)
-        val canvas = Canvas(bitmap)
-        canvas.drawColor(Color.WHITE)
-        JpegRenderer.dibujar(canvas, resumen, etiquetas, locale)
-        FileOutputStream(archivoDestino).use { salida ->
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 92, salida)
-        }
-        bitmap.recycle()
+        exportarJpgInterno(archivoDestino, resumen, etiquetas, locale, null)
     }
 
-    @Deprecated("Usar exportarJpg con parámetros reales", replaceWith = ReplaceWith(
-        "exportarJpg(archivoDestino, resumen, etiquetas, locale)"))
-    fun exportarJpg(archivoDestino: File) {
-        val bitmap = Bitmap.createBitmap(
-            TamanosDocumento.JPG_ANCHO_PX, TamanosDocumento.JPG_ALTO_PX, Bitmap.Config.ARGB_8888)
-        val canvas = Canvas(bitmap)
-        canvas.drawColor(Color.WHITE)
-        dibujarTest(canvas, TamanosDocumento.JPG_ANCHO_PX, TamanosDocumento.JPG_ALTO_PX)
-        FileOutputStream(archivoDestino).use { salida ->
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 92, salida)
-        }
-        bitmap.recycle()
+    fun exportarJpg(
+        contexto: Context,
+        archivoDestino: File,
+        resumen: com.horastrabajo.app.domain.ResumenMensual,
+        etiquetas: Etiquetas,
+        locale: java.util.Locale,
+    ) {
+        exportarJpgInterno(archivoDestino, resumen, etiquetas, locale, cargarLogo(contexto, resumen.trabajo.fotoUri))
     }
 
-    private fun dibujarTest(canvas: Canvas, ancho: Int, alto: Int) {
-        val paint = Paint().apply {
-            textSize = ancho / 12f
-            isFakeBoldText = true
-            isAntiAlias = true
-            textAlign = Paint.Align.CENTER
-            color = Color.DKGRAY
+    private fun exportarJpgInterno(
+        archivoDestino: File,
+        resumen: com.horastrabajo.app.domain.ResumenMensual,
+        etiquetas: Etiquetas,
+        locale: java.util.Locale,
+        logo: Bitmap?,
+    ) {
+        val altoNecesario = JpegRenderer.altoNecesario(resumen, etiquetas)
+        val altoPx = ceil(altoNecesario * TamanosDocumento.ESCALA_JPG.toDouble()).toInt()
+        val bytesNecesarios = TamanosDocumento.JPG_ANCHO_PX.toLong() * altoPx.toLong() * 4L
+        check(altoPx <= TamanosDocumento.MAX_JPG_ALTO_PX && bytesNecesarios <= TamanosDocumento.MAX_JPG_BYTES) {
+            "El resumen es demasiado grande para un único JPG; usa el PDF."
         }
-        canvas.drawText("TEST", ancho / 2f, alto / 2f, paint)
+        val bitmap = Bitmap.createBitmap(
+            TamanosDocumento.JPG_ANCHO_PX, altoPx, Bitmap.Config.ARGB_8888)
+        try {
+            val canvas = Canvas(bitmap)
+            canvas.drawColor(Color.WHITE)
+            JpegRenderer.dibujar(canvas, resumen, etiquetas, locale, logo)
+            FileOutputStream(archivoDestino).use { salida ->
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 92, salida)
+            }
+        } finally {
+            bitmap.recycle()
+        }
     }
+
+    private fun cargarLogo(contexto: Context, fotoUri: String?): Bitmap? = runCatching {
+        fotoUri?.let { contexto.contentResolver.openInputStream(Uri.parse(it))?.use(BitmapFactory::decodeStream) }
+    }.getOrNull()
 }

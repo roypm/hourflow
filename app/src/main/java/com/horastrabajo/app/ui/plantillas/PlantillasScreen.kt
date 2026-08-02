@@ -51,6 +51,7 @@ import com.horastrabajo.app.domain.model.PlantillaDia
 import com.horastrabajo.app.domain.model.PlantillaMes
 import com.horastrabajo.app.domain.model.PlantillaSemana
 import com.horastrabajo.app.ui.AppViewModelProvider
+import com.horastrabajo.app.ui.components.localeActual
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -249,7 +250,15 @@ private fun MesesTab(
 
 @Composable
 private fun PlantillaSemanaCard(plantilla: PlantillaSemana, onEditar: () -> Unit, onEliminar: () -> Unit) {
-    val diasTrabajados = plantilla.dias.count { it.horaEntrada != null }
+    val resumen = resumenSemanaAutomatico(plantilla, localeActual())
+    val resumenAutomatico = when {
+        resumen.diasTrabajados == 0 -> stringResource(R.string.plantilla_resumen_sin_dias)
+        else -> buildList {
+            add(stringResource(R.string.plantilla_resumen_dias, resumen.diasTrabajados, resumen.diasTexto))
+            add(resumen.horarioTexto ?: stringResource(R.string.plantilla_resumen_horarios_varios))
+            if (resumen.incluyeNocturnos) add(stringResource(R.string.plantilla_resumen_nocturnos))
+        }.joinToString(" · ")
+    }
     Card(
         modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp),
     ) {
@@ -260,11 +269,10 @@ private fun PlantillaSemanaCard(plantilla: PlantillaSemana, onEditar: () -> Unit
         ) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(plantilla.nombre, style = MaterialTheme.typography.titleMedium)
-                Text(
-                    stringResource(R.string.plantilla_dias_laborales, diasTrabajados),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
+                if (plantilla.descripcion.isNotBlank()) {
+                    Text(plantilla.descripcion, style = MaterialTheme.typography.bodySmall)
+                }
+                Text(resumenAutomatico, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
             Row {
                 IconButton(onClick = onEditar) { Icon(Icons.Filled.Edit, contentDescription = stringResource(R.string.accion_editar)) }
@@ -276,7 +284,18 @@ private fun PlantillaSemanaCard(plantilla: PlantillaSemana, onEditar: () -> Unit
 
 @Composable
 private fun PlantillaMesCard(plantilla: PlantillaMes, onEditar: () -> Unit, onEliminar: () -> Unit) {
-    val semanasConfiguradas = plantilla.overridesPorSemana.size
+    val personalizaciones = plantilla.overridesPorSemana.size
+    val resumenAutomatico = if (plantilla.plantillaSemanaDefault != null) {
+        if (personalizaciones == 0) {
+            stringResource(R.string.plantilla_resumen_mes_base_sin_cambios, plantilla.plantillaSemanaDefault.nombre)
+        } else {
+            stringResource(R.string.plantilla_resumen_mes_base_personalizaciones, plantilla.plantillaSemanaDefault.nombre, personalizaciones)
+        }
+    } else if (personalizaciones == 0) {
+        stringResource(R.string.plantilla_resumen_mes_sin_base_sin_cambios)
+    } else {
+        stringResource(R.string.plantilla_resumen_mes_sin_base_personalizaciones, personalizaciones)
+    }
     Card(
         modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp),
     ) {
@@ -287,11 +306,10 @@ private fun PlantillaMesCard(plantilla: PlantillaMes, onEditar: () -> Unit, onEl
         ) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(plantilla.nombre, style = MaterialTheme.typography.titleMedium)
-                Text(
-                    stringResource(R.string.plantilla_semanas_configuradas, semanasConfiguradas),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
+                if (plantilla.descripcion.isNotBlank()) {
+                    Text(plantilla.descripcion, style = MaterialTheme.typography.bodySmall)
+                }
+                Text(resumenAutomatico, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
             Row {
                 IconButton(onClick = onEditar) { Icon(Icons.Filled.Edit, contentDescription = stringResource(R.string.accion_editar)) }

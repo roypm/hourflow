@@ -133,7 +133,8 @@
     <string name="idioma_ingles">Anglès</string>
     <string name="idioma_catalan">Català</string>
     <string name="ajustes_backup">Còpia de seguretat</string>
-    <string name="ajustes_backup_descripcion">Exporta les teves feines, hores i tarifes a un fitxer, o restaura\'n una.</string>
+    <string name="ajustes_backup_descripcion">Exporta les teves feines, torns, plantilles, tarifes i extres a un fitxer, o restaura\'n una.</string>
+    <string name="ajustes_backup_aviso_actualizacion">Abans d’instal·lar una APK manualment, exporta una còpia JSON per poder recuperar les dades si Android demana desinstal·lar la versió anterior.</string>
     <string name="ajustes_exportar_backup">Exporta la còpia (JSON)</string>
     <string name="ajustes_importar_backup">Importa una còpia (JSON)</string>
     <string name="ajustes_importar_titulo">Importa una còpia</string>
@@ -142,14 +143,17 @@
     <string name="ajustes_error_exportar">No s\'ha pogut exportar la còpia.</string>
     <string name="ajustes_error_importar">No s\'ha pogut importar la còpia: el fitxer no és vàlid.</string>
     <string name="ajustes_error_leer">No s\'ha pogut llegir el fitxer seleccionat.</string>
+    <string name="ajustes_actualizaciones">Actualitzacions</string>
+    <string name="ajustes_actualizaciones_descripcion">Les noves versions es publiquen a GitHub. Les pots consultar manualment quan vulguis.</string>
+    <string name="ajustes_ver_versiones">Veure versions a GitHub</string>
 
     <!-- Pantalla: Resum -->
     <string name="resumen_titulo">Resum</string>
     <string name="resumen_exportar_pdf">Exporta a PDF</string>
     <string name="resumen_exportar_jpeg">Exporta a JPEG</string>
     <string name="resumen_error_exportar">No s\'ha pogut generar el fitxer. Torna-ho a provar.</string>
-    <string name="resumen_pdf_subtitulo">Informe detallat: notes, torns nocturns, tarifes especials, diners extra i logo</string>
-    <string name="resumen_jpeg_subtitulo">Resum bàsic per compartir</string>
+    <string name="resumen_pdf_subtitulo">Informe detallat amb torns, notes, tarifes, extres i logo</string>
+    <string name="resumen_jpeg_subtitulo">Resum complet en una sola imatge, llest per compartir</string>
     <string name="resumen_total_a_cobrar">Total a cobrar: %1$s</string>
     <string name="resumen_vacio">No hi ha registres aquest mes</string>
 
@@ -167,6 +171,15 @@
     <string name="plantilla_eliminar_mensaje">S\'eliminarà \"%1$s\". Aquesta acció no es pot desfer.</string>
     <string name="plantilla_dias_laborales">%1$d dies laborables</string>
     <string name="plantilla_semanas_configuradas">%1$d setmanes configurades</string>
+    <string name="plantilla_descripcion">Descripció (opcional)</string>
+    <string name="plantilla_resumen_dias">%1$d dies laborables · %2$s</string>
+    <string name="plantilla_resumen_sin_dias">Sense dies laborables configurats</string>
+    <string name="plantilla_resumen_horarios_varios">Horaris variats</string>
+    <string name="plantilla_resumen_nocturnos">Inclou torns nocturns</string>
+    <string name="plantilla_resumen_mes_base_sin_cambios">Base: %1$s · Sense personalitzacions</string>
+    <string name="plantilla_resumen_mes_base_personalizaciones">Base: %1$s · %2$d personalitzacions</string>
+    <string name="plantilla_resumen_mes_sin_base_sin_cambios">Sense plantilla base · Sense personalitzacions</string>
+    <string name="plantilla_resumen_mes_sin_base_personalizaciones">Sense plantilla base · %1$d personalitzacions</string>
     <string name="plantilla_semana_default">Plantilla base</string>
     <string name="plantilla_sin_seleccion">Sense selecció</string>
     <string name="plantilla_overrides_semana">Personalització per setmana</string>
@@ -217,4 +230,20 @@
     <string name="export_total_horas">Total hores:</string>
     <string name="export_nocturno">Nocturn</string>
     <string name="export_pagina">Pàgina %1$d de %2$d</string>
+    <string name="export_columna_fecha">Data</string>
+    <string name="export_columna_dia">Dia</string>
+    <string name="export_columna_horario">Horari</string>
+    <string name="export_columna_detalles">Detalls</string>
+    <string name="export_columna_horas">Hores</string>
+    <string name="export_columna_dinero">Diners</string>
+    <string name="export_columna_concepto">Concepte</string>
+    <string name="export_columna_importe">Import</string>
+    <string name="resumen_periodo">%1$s</string>
+    <string name="resumen_turnos">%1$d torns</string>
+    <string name="resumen_dinero_turnos">Diners dels torns</string>
+    <string name="resumen_dinero_extra">Diners extra</string>
+    <string name="resumen_previsualizacion">Previsualització</string>
+    <string name="resumen_archivos">Noms dels fitxers</string>
+    <string name="resumen_archivo_pdf">PDF: %1$s</string>
+    <string name="resumen_archivo_jpg">JPG: %1$s</string>
 </resources>

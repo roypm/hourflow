@@ -9,9 +9,17 @@ HourFlow is a local-first Android app for tracking personal work hours, monthly 
 
 The project is built with Kotlin, Jetpack Compose, Material 3, Room, DataStore Preferences, Navigation Compose, and kotlinx.serialization. It is intentionally single-user and offline-first: all work data stays on the device unless the user exports it.
 
+## Download and update
+
+Download the latest APK from [GitHub Releases](https://github.com/roypm/hourflow/releases/latest).
+
+HourFlow does not install updates automatically. Before installing an APK manually, export a JSON backup from **Settings > Backup**. If Android does not accept the new APK as an update because its signing key is different, uninstall the old version, install the new APK, and import the backup again. The backup includes jobs, shifts, rates, extra money, weekly templates, and monthly templates.
+
+The app includes a direct link to the latest GitHub Releases page in **Settings > Updates**.
+
 ## Status
 
-Personal project / portfolio-ready Android app. The app is functional, local-first, and distributed through GitHub Releases. Downloadable APKs are attached to each release.
+Personal Android project focused on local-first work-hour tracking. The app is functional and distributed through GitHub Releases, with downloadable APKs attached to each release.
 
 ## Screenshots
 
@@ -73,11 +81,11 @@ Screenshots use sample data.
 - JSON backup/restore designed for round-trip data portability.
 - Historical monthly rates so future rate changes do not recalculate past work.
 - Night-shift handling for work sessions that cross midnight.
-- CI workflow with unit tests, debug/release APK builds, downloadable artifacts, and automatic GitHub Releases.
+- CI workflow with unit tests, validation APK artifacts, tagged release APKs, checksums, and automatic GitHub Releases.
 
 ## Privacy
 
-HourFlow stores data locally on the device. It does not require accounts, servers, analytics, or network access.
+HourFlow stores data locally on the device. Core tracking and export features do not require accounts, servers, analytics, or network access. Network access is only needed if the user chooses to open the GitHub Releases page for an update.
 
 ## Tech Stack
 
@@ -126,28 +134,13 @@ Release builds use `keystore.properties` when present. If that file is not prese
 
 ## GitHub Actions
 
-The Android workflow runs on pushes to `main`, pull requests to `main`, and version tags that start with `v`.
+The Android workflow runs tests on pushes to `main` and pull requests. It builds a validation debug APK and uploads it as a workflow artifact.
 
-It checks that tests pass and both APK variants compile:
+A GitHub Release is created only when a version tag such as `v1.1.0` is pushed. The workflow validates that the tag matches `VERSION_NAME`, builds one versioned release APK, creates a SHA-256 checksum, attaches both files to the Release, and generates release notes with the backup instructions.
 
-```bash
-./gradlew test
-./gradlew :app:assembleDebug
-./gradlew :app:assembleRelease
-```
+Version-specific release notes are stored in `docs/releases/`, for example `docs/releases/v1.1.0.md`, and are included automatically when the matching tag is published.
 
-Every workflow run uploads downloadable APK artifacts.
-
-On pushes to `main`, the workflow reads `VERSION_NAME` from `gradle.properties` and creates a GitHub Release automatically when that version does not already exist. For example, `VERSION_NAME=1.0.0` publishes `v1.0.0`.
-
-You can also publish a release manually by pushing a version tag:
-
-```bash
-git tag v1.0.0
-git push origin v1.0.0
-```
-
-The generated release APK uses the same signing behavior as local builds: it uses `keystore.properties` when present and falls back to debug signing otherwise.
+The release build uses `keystore.properties` when present. Without that file, it falls back to debug signing so the project can still be built without private signing material. Because the CI runner may use a different debug key, users should always export a JSON backup before installing a release APK.
 
 Version bumps are automated with Gradle tasks:
 
@@ -159,26 +152,22 @@ Version bumps are automated with Gradle tasks:
 
 Each bump increments `VERSION_CODE` and updates `VERSION_NAME` in `gradle.properties`.
 
-## Release Flow
+## Release flow
 
-For normal changes:
+The complete release checklist, including automatic and manual publication, is documented in [RELEASING.md](RELEASING.md).
 
-```bash
-git add .
-git commit -m "Describe the change"
-git push
-```
-
-For a new release:
+The short automatic flow is:
 
 ```bash
-./gradlew bumpPatch
+./gradlew bumpMinor
 git add gradle.properties
-git commit -m "Release 1.0.1"
-git push
+git commit -m "Release 1.1.0"
+git push origin main
+git tag v1.1.0
+git push origin v1.1.0
 ```
 
-Use `bumpMinor` for feature releases and `bumpMajor` for large version changes. GitHub Actions creates the GitHub Release automatically when the new `VERSION_NAME` does not already exist.
+Use `bumpPatch` for fixes, `bumpMinor` for features, and `bumpMajor` for breaking changes. Always replace the example version with the value written to `gradle.properties`.
 
 ## Tests
 
@@ -213,13 +202,6 @@ The app keeps Room as the single source of truth. ViewModels expose screen state
 More detail: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
 
 Development practices: [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md)
-
-## Roadmap
-
-- Add portfolio screenshots and demo data captures.
-- Add instrumentation tests for key Compose flows.
-- Improve app icon and visual identity.
-- Optional Play Store or internal testing distribution.
 
 ## License
 

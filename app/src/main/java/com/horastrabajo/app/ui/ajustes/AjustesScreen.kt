@@ -1,5 +1,7 @@
 package com.horastrabajo.app.ui.ajustes
 
+import android.content.Intent
+import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
@@ -142,11 +144,17 @@ fun AjustesScreen(
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
                 )
+                Text(
+                    stringResource(R.string.ajustes_backup_aviso_actualizacion),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
+                )
                 TextButton(
                     onClick = {
                         viewModel.exportarBackup { json ->
-                            val marca = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"))
-                            val archivo = File(directorioExports(contexto), "backup_$marca.json")
+                            val marca = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HHmm"))
+                            val archivo = File(directorioExports(contexto), "${marca}_HourFlow_backup.json")
                             withContext(Dispatchers.IO) { archivo.writeText(json) }
                             compartirArchivo(contexto, archivo, "application/json")
                         }
@@ -157,6 +165,23 @@ fun AjustesScreen(
                     onClick = { mostrarConfirmacionImportar = true },
                     modifier = Modifier.padding(start = 8.dp),
                 ) { Text(stringResource(R.string.ajustes_importar_backup)) }
+            }
+
+            SeccionAjustes(titulo = stringResource(R.string.ajustes_actualizaciones)) {
+                Text(
+                    stringResource(R.string.ajustes_actualizaciones_descripcion),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
+                )
+                TextButton(
+                    onClick = {
+                        contexto.startActivity(
+                            Intent(Intent.ACTION_VIEW, Uri.parse(GITHUB_RELEASES_URL))
+                        )
+                    },
+                    modifier = Modifier.padding(start = 8.dp),
+                ) { Text(stringResource(R.string.ajustes_ver_versiones)) }
             }
         }
     }
@@ -222,3 +247,5 @@ private fun etiquetaIdioma(idioma: IdiomaPreferido): Int = when (idioma) {
     IdiomaPreferido.INGLES -> R.string.idioma_ingles
     IdiomaPreferido.CATALAN -> R.string.idioma_catalan
 }
+
+private const val GITHUB_RELEASES_URL = "https://github.com/roypm/hourflow/releases/latest"

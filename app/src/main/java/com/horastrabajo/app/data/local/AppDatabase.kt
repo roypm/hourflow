@@ -53,9 +53,13 @@ abstract class AppDatabase : RoomDatabase() {
         entradas: List<List<EntradaHorasEntity>>,
         tarifas: List<List<TarifaMensualEntity>>,
         dinerosExtra: List<List<DineroExtraEntity>>,
-    ) {
+        plantillasSemana: List<List<PlantillaSemanaBackupImport>> = emptyList(),
+        plantillasMes: List<List<PlantillaMesBackupImport>> = emptyList(),
+    ): Map<Long, Long> {
+        val trabajoIds = mutableMapOf<Long, Long>()
         for (i in trabajos.indices) {
             val nuevoId = trabajoDao().insert(trabajos[i])
+            trabajoIds[trabajos[i].id] = nuevoId
             entradas.getOrNull(i)?.let { lista ->
                 entradaHorasDao().insertAll(lista.map { it.copy(trabajoId = nuevoId) })
             }
@@ -65,7 +69,38 @@ abstract class AppDatabase : RoomDatabase() {
             dinerosExtra.getOrNull(i)?.let { lista ->
                 dineroExtraDao().insertAll(lista.map { it.copy(trabajoId = nuevoId) })
             }
+
+            val idsPlantillasSemana = mutableMapOf<Long, Long>()
+            plantillasSemana.getOrNull(i).orEmpty().forEach { plantilla ->
+                val nuevoIdPlantilla = plantillaSemanaDao().insert(
+                    plantilla.entity.copy(id = 0L, trabajoId = nuevoId)
+                )
+                idsPlantillasSemana[plantilla.entity.id] = nuevoIdPlantilla
+                plantillaSemanaDao().insertDetalles(
+                    plantilla.detalles.map { it.copy(id = 0L, plantillaSemanaId = nuevoIdPlantilla) }
+                )
+            }
+
+            plantillasMes.getOrNull(i).orEmpty().forEach { plantilla ->
+                val nuevoIdPlantilla = plantillaMesDao().insert(
+                    plantilla.entity.copy(
+                        id = 0L,
+                        trabajoId = nuevoId,
+                        plantillaSemanaDefaultId = plantilla.entity.plantillaSemanaDefaultId?.let(idsPlantillasSemana::get),
+                    )
+                )
+                plantillaMesDao().insertDetalles(
+                    plantilla.detalles.map { detalle ->
+                        detalle.copy(
+                            id = 0L,
+                            plantillaMesId = nuevoIdPlantilla,
+                            plantillaSemanaId = detalle.plantillaSemanaId?.let(idsPlantillasSemana::get),
+                        )
+                    }
+                )
+            }
         }
+        return trabajoIds
     }
 
     companion object {

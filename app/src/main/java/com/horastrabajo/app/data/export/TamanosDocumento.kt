@@ -15,4 +15,7 @@ object TamanosDocumento {
     const val MARGEN_PT = 36f
 
     val ESCALA_JPG: Float = JPG_ANCHO_PX.toFloat() / PDF_ANCHO_PT
+
+    const val MAX_JPG_ALTO_PX = 16_384
+    const val MAX_JPG_BYTES = 64L * 1024L * 1024L
 }

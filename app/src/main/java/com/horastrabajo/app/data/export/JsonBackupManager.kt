@@ -3,11 +3,21 @@ package com.horastrabajo.app.data.export
 import com.horastrabajo.app.data.export.dto.BackupDto
 import com.horastrabajo.app.data.export.dto.DineroExtraDto
 import com.horastrabajo.app.data.export.dto.EntradaHorasDto
+import com.horastrabajo.app.data.export.dto.PlantillaDiaDto
+import com.horastrabajo.app.data.export.dto.PlantillaMesDto
+import com.horastrabajo.app.data.export.dto.PlantillaMesOverrideDto
+import com.horastrabajo.app.data.export.dto.PlantillaSemanaDto
 import com.horastrabajo.app.data.export.dto.TarifaMensualDto
 import com.horastrabajo.app.data.export.dto.TrabajoDto
 import com.horastrabajo.app.data.local.AppDatabase
+import com.horastrabajo.app.data.local.PlantillaMesBackupImport
+import com.horastrabajo.app.data.local.PlantillaSemanaBackupImport
 import com.horastrabajo.app.data.local.entity.DineroExtraEntity
 import com.horastrabajo.app.data.local.entity.EntradaHorasEntity
+import com.horastrabajo.app.data.local.entity.PlantillaMesDetalleEntity
+import com.horastrabajo.app.data.local.entity.PlantillaMesEntity
+import com.horastrabajo.app.data.local.entity.PlantillaSemanaDetalleEntity
+import com.horastrabajo.app.data.local.entity.PlantillaSemanaEntity
 import com.horastrabajo.app.data.local.entity.TarifaMensualEntity
 import com.horastrabajo.app.data.local.entity.TrabajoEntity
 import com.horastrabajo.app.data.repository.DineroExtraRepository
@@ -32,13 +42,16 @@ internal typealias ImportarTrabajosCompletos = suspend (
     entradas: List<List<EntradaHorasEntity>>,
     tarifas: List<List<TarifaMensualEntity>>,
     dinerosExtra: List<List<DineroExtraEntity>>,
-) -> Unit
+    plantillasSemana: List<List<PlantillaSemanaBackupImport>>,
+    plantillasMes: List<List<PlantillaMesBackupImport>>,
+) -> Map<Long, Long>
 
 class JsonBackupManager internal constructor(
     private val trabajoRepository: TrabajoRepository,
     private val entradaHorasRepository: EntradaHorasRepository,
     private val tarifaMensualRepository: TarifaMensualRepository,
     private val dineroExtraRepository: DineroExtraRepository,
+    private val database: AppDatabase? = null,
     private val importarTrabajosCompletos: ImportarTrabajosCompletos,
 ) {
     constructor(
@@ -52,6 +65,7 @@ class JsonBackupManager internal constructor(
         entradaHorasRepository = entradaHorasRepository,
         tarifaMensualRepository = tarifaMensualRepository,
         dineroExtraRepository = dineroExtraRepository,
+        database = database,
         importarTrabajosCompletos = database::importarTrabajosCompletos,
     )
 
@@ -59,6 +73,7 @@ class JsonBackupManager internal constructor(
 
     suspend fun exportarTodo(): String {
         val trabajos = trabajoRepository.observeAll().first()
+        val db = database
         val trabajosDto = trabajos.map { trabajo ->
             TrabajoDto(
                 id = trabajo.id,
@@ -75,6 +90,36 @@ class JsonBackupManager internal constructor(
                     )
                 },
                 dineroExtra = dineroExtraRepository.obtenerTodoDelTrabajo(trabajo.id).map { it.toDto() },
+                plantillasSemana = db?.let { actualDb -> actualDb.plantillaSemanaDao().getAllByTrabajo(trabajo.id).map { plantilla ->
+                    PlantillaSemanaDto(
+                        id = plantilla.id,
+                        nombre = plantilla.nombre,
+                        descripcion = plantilla.descripcion,
+                        dias = actualDb.plantillaSemanaDao().getDetalles(plantilla.id).map { dia ->
+                            PlantillaDiaDto(
+                                diaSemana = dia.diaSemana,
+                                horaEntrada = dia.horaEntrada,
+                                horaSalida = dia.horaSalida,
+                                esDiaSiguiente = dia.esDiaSiguiente,
+                            )
+                        },
+                    )
+                } } ?: emptyList(),
+                plantillasMes = db?.let { actualDb -> actualDb.plantillaMesDao().getAllByTrabajo(trabajo.id).map { plantilla ->
+                    PlantillaMesDto(
+                        id = plantilla.id,
+                        nombre = plantilla.nombre,
+                        descripcion = plantilla.descripcion,
+                        plantillaSemanaDefaultId = plantilla.plantillaSemanaDefaultId,
+                        overrides = actualDb.plantillaMesDao().getDetalles(plantilla.id).map { detalle ->
+                            PlantillaMesOverrideDto(
+                                semanaDelMes = detalle.semanaDelMes,
+                                plantillaSemanaId = detalle.plantillaSemanaId,
+                                esSemanaLibre = detalle.esSemanaLibre,
+                            )
+                        },
+                    )
+                } } ?: emptyList(),
             )
         }
         return json.encodeToString(BackupDto.serializer(), BackupDto(trabajos = trabajosDto))
@@ -82,10 +127,15 @@ class JsonBackupManager internal constructor(
 
     suspend fun importarTodo(contenidoJson: String) {
         val backup = json.decodeFromString(BackupDto.serializer(), contenidoJson)
+        require(backup.version <= CURRENT_BACKUP_VERSION) {
+            "Backup version ${backup.version} is newer than supported version $CURRENT_BACKUP_VERSION"
+        }
         val trabajos = mutableListOf<TrabajoEntity>()
         val entradas = mutableListOf<List<EntradaHorasEntity>>()
         val tarifas = mutableListOf<List<TarifaMensualEntity>>()
         val dinerosExtra = mutableListOf<List<DineroExtraEntity>>()
+        val plantillasSemana = mutableListOf<List<PlantillaSemanaBackupImport>>()
+        val plantillasMes = mutableListOf<List<PlantillaMesBackupImport>>()
         for (trabajoDto in backup.trabajos) {
             trabajos.add(
                 TrabajoEntity(
@@ -106,10 +156,52 @@ class JsonBackupManager internal constructor(
                 }
             )
             dinerosExtra.add(trabajoDto.dineroExtra.map { it.toEntity() })
+            plantillasSemana.add(trabajoDto.plantillasSemana.map { it.toImport() })
+            plantillasMes.add(trabajoDto.plantillasMes.map { it.toImport() })
         }
-        importarTrabajosCompletos(trabajos, entradas, tarifas, dinerosExtra)
+        importarTrabajosCompletos(trabajos, entradas, tarifas, dinerosExtra, plantillasSemana, plantillasMes)
+    }
+
+    private companion object {
+        const val CURRENT_BACKUP_VERSION = 4
     }
 }
+
+private fun PlantillaSemanaDto.toImport() = PlantillaSemanaBackupImport(
+    entity = PlantillaSemanaEntity(
+        id = id,
+        trabajoId = 0L,
+        nombre = nombre,
+        descripcion = descripcion,
+    ),
+    detalles = dias.map { dia ->
+        PlantillaSemanaDetalleEntity(
+            plantillaSemanaId = id,
+            diaSemana = dia.diaSemana,
+            horaEntrada = dia.horaEntrada,
+            horaSalida = dia.horaSalida,
+            esDiaSiguiente = dia.esDiaSiguiente,
+        )
+    },
+)
+
+private fun PlantillaMesDto.toImport() = PlantillaMesBackupImport(
+    entity = PlantillaMesEntity(
+        id = id,
+        trabajoId = 0L,
+        nombre = nombre,
+        descripcion = descripcion,
+        plantillaSemanaDefaultId = plantillaSemanaDefaultId,
+    ),
+    detalles = overrides.map { override ->
+        PlantillaMesDetalleEntity(
+            plantillaMesId = id,
+            semanaDelMes = override.semanaDelMes,
+            plantillaSemanaId = override.plantillaSemanaId,
+            esSemanaLibre = override.esSemanaLibre,
+        )
+    },
+)
 
 private fun EntradaHoras.toDto() = EntradaHorasDto(
     id = id,

@@ -18,6 +18,9 @@ interface PlantillaMesDao {
     @Query("SELECT * FROM plantilla_mes WHERE id = :id")
     suspend fun getById(id: Long): PlantillaMesEntity?
 
+    @Query("SELECT * FROM plantilla_mes WHERE trabajo_id = :trabajoId")
+    suspend fun getAllByTrabajo(trabajoId: Long): List<PlantillaMesEntity>
+
     @Query("SELECT * FROM plantilla_mes_detalle WHERE plantilla_mes_id = :plantillaMesId")
     suspend fun getDetalles(plantillaMesId: Long): List<PlantillaMesDetalleEntity>
 

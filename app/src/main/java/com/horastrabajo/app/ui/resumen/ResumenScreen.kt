@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Share
@@ -44,7 +46,13 @@ import com.horastrabajo.app.data.export.ResumenExporter
 import com.horastrabajo.app.data.export.compartirArchivo
 import com.horastrabajo.app.data.export.directorioExports
 import com.horastrabajo.app.data.export.etiquetasExport
+import com.horastrabajo.app.data.export.formatearDiaSemanaCorto
+import com.horastrabajo.app.data.export.formatearFechaCorta
+import com.horastrabajo.app.data.export.formatearHora
+import com.horastrabajo.app.data.export.formatearMesAnio
+import com.horastrabajo.app.data.export.nombreArchivoResumen
 import com.horastrabajo.app.domain.ResumenMensual
+import com.horastrabajo.app.domain.model.Dinero
 import com.horastrabajo.app.domain.model.formatearHoras
 import com.horastrabajo.app.ui.AppViewModelProvider
 import com.horastrabajo.app.ui.components.localeActual
@@ -53,8 +61,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 private const val TAG = "ResumenScreen"
 
@@ -84,8 +90,11 @@ fun ResumenScreen(
         scope.launch {
             exportandoFormato = extension
             try {
-                val marca = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"))
-                val archivo = File(directorioExports(contexto), "resumen_$marca.$extension")
+                val resumenParaNombre = resumen ?: error("El resumen aún no está disponible")
+                val archivo = File(
+                    directorioExports(contexto),
+                    nombreArchivoResumen(resumenParaNombre, extension),
+                )
                 withContext(Dispatchers.IO) {
                     generar(archivo)
                 }
@@ -131,18 +140,30 @@ fun ResumenScreen(
             else -> {
                 val localeExport = localeActual()
                 Column(
-                    modifier = Modifier.fillMaxSize().padding(padding).padding(16.dp),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(padding)
+                        .padding(16.dp)
+                        .verticalScroll(rememberScrollState()),
                     verticalArrangement = Arrangement.spacedBy(12.dp),
                 ) {
                     if (hayDatos) {
-                        FilaTotales(resumenActual)
+                        CabeceraResumen(resumenActual, localeExport)
+                        PanelMetricas(resumenActual)
+                        VistaPrevia(resumenActual, localeExport)
+                        NombresArchivos(resumenActual)
                     }
                     TarjetaExport(
                         titulo = stringResource(R.string.resumen_exportar_pdf),
                         subtitulo = stringResource(R.string.resumen_pdf_subtitulo),
                         exportando = exportandoFormato == "pdf",
                         habilitada = hayDatos,
-                        onClick = { exportar("pdf", "application/pdf") { ResumenExporter.exportarPdf(it) } },
+                        onClick = {
+                            val etiquetas = etiquetasExport(contexto.resources, resumenActual)
+                            exportar("pdf", "application/pdf") {
+                                ResumenExporter.exportarPdf(contexto, it, resumenActual, etiquetas, localeExport)
+                            }
+                        },
                     )
                     TarjetaExport(
                         titulo = stringResource(R.string.resumen_exportar_jpeg),
@@ -152,7 +173,7 @@ fun ResumenScreen(
                         onClick = {
                             val etiquetas = etiquetasExport(contexto.resources, resumenActual)
                             exportar("jpg", "image/jpeg") { file ->
-                                ResumenExporter.exportarJpg(file, resumenActual, etiquetas, localeExport)
+                                ResumenExporter.exportarJpg(contexto, file, resumenActual, etiquetas, localeExport)
                             }
                         },
                     )
@@ -171,21 +192,93 @@ fun ResumenScreen(
 }
 
 @Composable
-private fun FilaTotales(resumen: ResumenMensual) {
-    Row(
-        modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-    ) {
-        Text(
-            text = stringResource(R.string.mes_total_horas, formatearHoras(resumen.totalHoras)),
-            style = MaterialTheme.typography.titleMedium,
-        )
+private fun CabeceraResumen(resumen: ResumenMensual, locale: java.util.Locale) {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Text(resumen.trabajo.nombre, style = MaterialTheme.typography.headlineSmall)
         Text(
             text = stringResource(
-                R.string.resumen_total_a_cobrar,
+                R.string.resumen_periodo,
+                resumen.trabajo.nombreUsuario + " · " + formatearMesAnio(resumen.mes, resumen.anio, locale),
+            ).trim(),
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+    }
+}
+
+@Composable
+private fun PanelMetricas(resumen: ResumenMensual) {
+    Card(modifier = Modifier.fillMaxWidth()) {
+        Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                Text(stringResource(R.string.resumen_turnos, resumen.dias.sumOf { it.entradas.size }), style = MaterialTheme.typography.titleMedium)
+                Text(formatearHoras(resumen.totalHoras), style = MaterialTheme.typography.titleMedium)
+            }
+            FilaMetrica(stringResource(R.string.resumen_dinero_turnos), resumen.totalDineroHoras.formateado(resumen.trabajo.simboloMoneda))
+            FilaMetrica(stringResource(R.string.resumen_dinero_extra), resumen.totalDineroExtra.formateado(resumen.trabajo.simboloMoneda))
+            FilaMetrica(
+                stringResource(R.string.resumen_total_a_cobrar, "").trimEnd(':', ' '),
                 resumen.totalDinero.formateado(resumen.trabajo.simboloMoneda),
-            ),
-            style = MaterialTheme.typography.titleMedium,
+                destacado = true,
+            )
+        }
+    }
+}
+
+@Composable
+private fun FilaMetrica(etiqueta: String, valor: String, destacado: Boolean = false) {
+    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+        Text(etiqueta, style = if (destacado) MaterialTheme.typography.titleMedium else MaterialTheme.typography.bodyMedium)
+        Text(valor, style = if (destacado) MaterialTheme.typography.titleMedium else MaterialTheme.typography.bodyMedium)
+    }
+}
+
+@Composable
+private fun VistaPrevia(resumen: ResumenMensual, locale: java.util.Locale) {
+    val turnos = resumen.dias.flatMap { dia -> dia.entradas.map { dia.fecha to it } }.take(4)
+    Card(modifier = Modifier.fillMaxWidth()) {
+        Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Text(stringResource(R.string.resumen_previsualizacion), style = MaterialTheme.typography.titleMedium)
+            turnos.forEach { (fecha, entrada) ->
+                val tarifa = entrada.precioPorHoraCustom ?: resumen.precioPorHora ?: Dinero.CERO
+                val dinero = Dinero.porHoras(entrada.horasDecimal, tarifa).formateado(resumen.trabajo.simboloMoneda)
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                    Text(
+                        "${formatearFechaCorta(fecha)} ${formatearDiaSemanaCorto(fecha, locale)} · ${formatearHora(entrada.horaEntrada)}-${formatearHora(entrada.horaSalida)}",
+                        style = MaterialTheme.typography.bodySmall,
+                        modifier = Modifier.fillMaxWidth(0.65f),
+                    )
+                    Text(
+                        "${formatearHoras(entrada.horasDecimal)} · $dinero",
+                        style = MaterialTheme.typography.bodySmall,
+                        modifier = Modifier.padding(start = 8.dp),
+                    )
+                }
+            }
+            if (resumen.dias.sumOf { it.entradas.size } > turnos.size) {
+                Text(
+                    text = "…",
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    style = MaterialTheme.typography.bodySmall,
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun NombresArchivos(resumen: ResumenMensual) {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Text(stringResource(R.string.resumen_archivos), style = MaterialTheme.typography.labelLarge)
+        Text(
+            stringResource(R.string.resumen_archivo_pdf, nombreArchivoResumen(resumen, "pdf")),
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+        Text(
+            stringResource(R.string.resumen_archivo_jpg, nombreArchivoResumen(resumen, "jpg")),
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
     }
 }

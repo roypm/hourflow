@@ -19,6 +19,7 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -53,7 +54,9 @@ fun PlantillaSemanaFormSheet(
     onDirtyChange: (Boolean) -> Unit = {},
 ) {
     var nombre by remember { mutableStateOf(plantillaExistente?.nombre ?: "") }
+    var descripcion by remember { mutableStateOf(plantillaExistente?.descripcion ?: "") }
     val nombreInicial = remember { plantillaExistente?.nombre ?: "" }
+    val descripcionInicial = remember { plantillaExistente?.descripcion ?: "" }
     var mostrarErrores by remember { mutableStateOf(false) }
     var confirmarDescartarCambios by remember { mutableStateOf(false) }
     val diasEstado = remember {
@@ -68,7 +71,7 @@ fun PlantillaSemanaFormSheet(
     }
     val esValido = nombre.isNotBlank() && horariosValidos
     val diasInicial = remember { plantillaExistente?.dias ?: (1..7).map { PlantillaDia(it, null, null, false) } }
-    val hayCambios = plantillaExistente != null && (nombre != nombreInicial || diasEstado.value != diasInicial)
+    val hayCambios = plantillaExistente != null && (nombre != nombreInicial || descripcion != descripcionInicial || diasEstado.value != diasInicial)
 
     LaunchedEffect(hayCambios) {
         onDirtyChange(hayCambios)
@@ -94,6 +97,15 @@ fun PlantillaSemanaFormSheet(
             mostrarErrores = mostrarErrores,
         )
 
+        OutlinedTextField(
+            value = descripcion,
+            onValueChange = { descripcion = it },
+            label = { Text(stringResource(R.string.plantilla_descripcion)) },
+            modifier = Modifier.fillMaxWidth(),
+            minLines = 2,
+            maxLines = 3,
+        )
+
         diasEstado.value.forEachIndexed { index, dia ->
             val nombreDia = DayOfWeek.of(dia.diaSemana).getDisplayName(TextStyle.SHORT, locale)
             DiaRowCompacto(
@@ -116,7 +128,7 @@ fun PlantillaSemanaFormSheet(
                             id = plantillaExistente?.id ?: 0L,
                             trabajoId = trabajoId,
                             nombre = nombre.trim(),
-                            descripcion = "",
+                            descripcion = descripcion.trim(),
                             dias = diasEstado.value,
                         )
                     )

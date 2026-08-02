@@ -201,7 +201,7 @@ class JsonBackupManagerTest {
         entradaHorasRepository = entradaHorasRepository,
         tarifaMensualRepository = tarifaMensualRepository,
         dineroExtraRepository = dineroExtraRepository,
-        importarTrabajosCompletos = { trabajos, entradas, tarifas, dinerosExtra ->
+        importarTrabajosCompletos = { trabajos, entradas, tarifas, dinerosExtra, _, _ ->
             importarEnFakes(
                 trabajoRepository = trabajoRepository,
                 entradaHorasRepository = entradaHorasRepository,
@@ -224,7 +224,8 @@ class JsonBackupManagerTest {
         entradas: List<List<EntradaHorasEntity>>,
         tarifas: List<List<TarifaMensualEntity>>,
         dinerosExtra: List<List<DineroExtraEntity>>,
-    ) {
+    ): Map<Long, Long> {
+        val ids = mutableMapOf<Long, Long>()
         for (i in trabajos.indices) {
             val trabajo = trabajos[i]
             val nuevoTrabajoId = trabajoRepository.guardar(
@@ -235,6 +236,7 @@ class JsonBackupManagerTest {
                     fotoUri = trabajo.fotoUri,
                 )
             )
+            ids[trabajo.id] = nuevoTrabajoId
             entradaHorasRepository.guardarVarias(
                 entradas.getOrElse(i) { emptyList() }.map { it.toDomain(nuevoTrabajoId) }
             )
@@ -245,6 +247,7 @@ class JsonBackupManagerTest {
                 dinerosExtra.getOrElse(i) { emptyList() }.map { it.toDomain(nuevoTrabajoId) }
             )
         }
+        return ids
     }
 
     private fun EntradaHorasEntity.toDomain(trabajoId: Long) = EntradaHoras(

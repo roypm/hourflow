@@ -133,7 +133,8 @@
     <string name="idioma_ingles">English</string>
     <string name="idioma_catalan">Catalan</string>
     <string name="ajustes_backup">Backup</string>
-    <string name="ajustes_backup_descripcion">Export your jobs, hours and rates to a file, or restore from one.</string>
+    <string name="ajustes_backup_descripcion">Export your jobs, shifts, templates, rates and extras to a file, or restore from one.</string>
+    <string name="ajustes_backup_aviso_actualizacion">Before installing an APK manually, export a JSON backup so you can recover your data if Android asks you to uninstall the previous version.</string>
     <string name="ajustes_exportar_backup">Export backup (JSON)</string>
     <string name="ajustes_importar_backup">Import backup (JSON)</string>
     <string name="ajustes_importar_titulo">Import backup</string>
@@ -142,14 +143,17 @@
     <string name="ajustes_error_exportar">The backup could not be exported.</string>
     <string name="ajustes_error_importar">The backup could not be imported: the file is not valid.</string>
     <string name="ajustes_error_leer">The selected file could not be read.</string>
+    <string name="ajustes_actualizaciones">Updates</string>
+    <string name="ajustes_actualizaciones_descripcion">New versions are published on GitHub. You can check them manually whenever you want.</string>
+    <string name="ajustes_ver_versiones">View versions on GitHub</string>
 
     <!-- Screen: Summary -->
     <string name="resumen_titulo">Summary</string>
     <string name="resumen_exportar_pdf">Export PDF</string>
     <string name="resumen_exportar_jpeg">Export JPEG</string>
     <string name="resumen_error_exportar">The file could not be generated. Please try again.</string>
-    <string name="resumen_pdf_subtitulo">Detailed report: notes, night shifts, special rates, extra money and logo</string>
-    <string name="resumen_jpeg_subtitulo">Basic summary to share</string>
+    <string name="resumen_pdf_subtitulo">Detailed report with shifts, notes, rates, extras and logo</string>
+    <string name="resumen_jpeg_subtitulo">Complete single-image summary, ready to share</string>
     <string name="resumen_total_a_cobrar">Total to collect: %1$s</string>
     <string name="resumen_vacio">No records this month</string>
 
@@ -167,6 +171,15 @@
     <string name="plantilla_eliminar_mensaje">\"%1$s\" will be deleted. This action cannot be undone.</string>
     <string name="plantilla_dias_laborales">%1$d working days</string>
     <string name="plantilla_semanas_configuradas">%1$d configured weeks</string>
+    <string name="plantilla_descripcion">Description (optional)</string>
+    <string name="plantilla_resumen_dias">%1$d working days · %2$s</string>
+    <string name="plantilla_resumen_sin_dias">No working days configured</string>
+    <string name="plantilla_resumen_horarios_varios">Varied schedules</string>
+    <string name="plantilla_resumen_nocturnos">Includes overnight shifts</string>
+    <string name="plantilla_resumen_mes_base_sin_cambios">Base: %1$s · No customizations</string>
+    <string name="plantilla_resumen_mes_base_personalizaciones">Base: %1$s · %2$d customizations</string>
+    <string name="plantilla_resumen_mes_sin_base_sin_cambios">No base template · No customizations</string>
+    <string name="plantilla_resumen_mes_sin_base_personalizaciones">No base template · %1$d customizations</string>
     <string name="plantilla_semana_default">Default template</string>
     <string name="plantilla_sin_seleccion">No selection</string>
     <string name="plantilla_overrides_semana">Per-week overrides</string>
@@ -217,4 +230,20 @@
     <string name="export_total_horas">Total hours:</string>
     <string name="export_nocturno">Night</string>
     <string name="export_pagina">Page %1$d of %2$d</string>
+    <string name="export_columna_fecha">Date</string>
+    <string name="export_columna_dia">Day</string>
+    <string name="export_columna_horario">Schedule</string>
+    <string name="export_columna_detalles">Details</string>
+    <string name="export_columna_horas">Hours</string>
+    <string name="export_columna_dinero">Money</string>
+    <string name="export_columna_concepto">Description</string>
+    <string name="export_columna_importe">Amount</string>
+    <string name="resumen_periodo">%1$s</string>
+    <string name="resumen_turnos">%1$d shifts</string>
+    <string name="resumen_dinero_turnos">Money from shifts</string>
+    <string name="resumen_dinero_extra">Extra money</string>
+    <string name="resumen_previsualizacion">Preview</string>
+    <string name="resumen_archivos">File names</string>
+    <string name="resumen_archivo_pdf">PDF: %1$s</string>
+    <string name="resumen_archivo_jpg">JPG: %1$s</string>
 </resources>
