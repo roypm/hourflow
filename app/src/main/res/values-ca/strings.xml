@@ -124,6 +124,10 @@
     <!-- Pantalla: Configuració -->
     <string name="ajustes_titulo">Configuració</string>
     <string name="ajustes_tema">Tema</string>
+    <string name="ajustes_formato_resumen">Format del resum</string>
+    <string name="ajustes_formato_resumen_descripcion">El format que faran servir els botons Comparteix i Descarrega del resum.</string>
+    <string name="formato_resumen_pdf">PDF</string>
+    <string name="formato_resumen_jpeg">JPEG</string>
     <string name="tema_sistema">Sistema</string>
     <string name="tema_claro">Clar</string>
     <string name="tema_oscuro">Fosc</string>
@@ -140,6 +144,7 @@
     <string name="ajustes_importar_titulo">Importa una còpia</string>
     <string name="ajustes_importar_mensaje">Les feines del fitxer s\'afegiran com a feines noves. Les teves feines actuals no se sobreescriuran ni s\'eliminaran.</string>
     <string name="ajustes_backup_importado">Còpia importada correctament.</string>
+    <string name="ajustes_backup_exportado">Còpia desada correctament.</string>
     <string name="ajustes_error_exportar">No s\'ha pogut exportar la còpia.</string>
     <string name="ajustes_error_importar">No s\'ha pogut importar la còpia: el fitxer no és vàlid.</string>
     <string name="ajustes_error_leer">No s\'ha pogut llegir el fitxer seleccionat.</string>
@@ -156,6 +161,14 @@
     <string name="resumen_jpeg_subtitulo">Resum complet en una sola imatge, llest per compartir</string>
     <string name="resumen_total_a_cobrar">Total a cobrar: %1$s</string>
     <string name="resumen_vacio">No hi ha registres aquest mes</string>
+    <string name="resumen_descargar">Descarrega</string>
+    <string name="resumen_descargado">Desat a Descàrregues: %1$s</string>
+    <string name="resumen_error_descargar">No s\'ha pogut desar a Descàrregues. Torna-ho a provar.</string>
+    <string name="resumen_permiso_descarga_denegado">Sense permís no es pot desar a Descàrregues.</string>
+    <string name="resumen_expandir_previsualizacion">Expandeix la previsualització</string>
+    <string name="resumen_contraer_previsualizacion">Contrau la previsualització</string>
+    <string name="resumen_hero_titulo">Comparteix o descarrega el resum</string>
+    <string name="resumen_formato_en_uso">Format actual: %1$s · Canvia\'l a Configuració</string>
 
     <!-- Plantilles de setmana i mes -->
     <string name="plantillas_titulo">Plantilles</string>

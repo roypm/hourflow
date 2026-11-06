@@ -398,7 +398,12 @@ fun MesScreen(
         }
 
         ModalBottomSheet(
-            onDismissRequest = { diaSeleccionado = null },
+            // Atrás y toque en el fondo también pasan por la confirmación, no solo el arrastre.
+            onDismissRequest = {
+                if (tieneCambiosEntrada) mostrarDialogoDescartarEntrada = true else diaSeleccionado = null
+            },
+            // Sin sheetGesturesEnabled en Material3 1.3: el arrastre con cambios lo frena
+            // el veto de confirmValueChange de entradaSheetState (rebota y muestra el diálogo).
             sheetState = entradaSheetState,
         ) {
             EntradaFormSheet(
@@ -409,7 +414,7 @@ fun MesScreen(
                 onGuardar = { entradaFormViewModel.guardar(it) },
                 onEliminar = { entradaFormViewModel.eliminar(it) },
                 onRestaurar = { entradaFormViewModel.restaurar(it) },
-                onCerrar = { diaSeleccionado = null },
+                onCerrar = { tieneCambiosEntrada = false; diaSeleccionado = null },
                 onDirtyChange = { tieneCambiosEntrada = it },
             )
         }
@@ -428,6 +433,7 @@ fun MesScreen(
             dismissButton = {
                 TextButton(onClick = {
                     mostrarDialogoDescartarEntrada = false
+                    tieneCambiosEntrada = false
                     diaSeleccionado = null
                 }) {
                     Text(stringResource(R.string.accion_descartar_cambios))

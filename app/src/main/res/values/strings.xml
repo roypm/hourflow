@@ -129,6 +129,10 @@
     <!-- Pantalla: Ajustes -->
     <string name="ajustes_titulo">Ajustes</string>
     <string name="ajustes_tema">Tema</string>
+    <string name="ajustes_formato_resumen">Formato del resumen</string>
+    <string name="ajustes_formato_resumen_descripcion">El formato que usarán los botones Compartir y Descargar del resumen.</string>
+    <string name="formato_resumen_pdf">PDF</string>
+    <string name="formato_resumen_jpeg">JPEG</string>
     <string name="tema_sistema">Sistema</string>
     <string name="tema_claro">Claro</string>
     <string name="tema_oscuro">Oscuro</string>
@@ -145,6 +149,7 @@
     <string name="ajustes_importar_titulo">Importar backup</string>
     <string name="ajustes_importar_mensaje">Los trabajos del archivo se añadirán como trabajos nuevos. No se sobrescribirán ni se eliminarán tus trabajos actuales.</string>
     <string name="ajustes_backup_importado">Backup importado correctamente.</string>
+    <string name="ajustes_backup_exportado">Backup guardado correctamente.</string>
     <string name="ajustes_error_exportar">No se pudo exportar el backup.</string>
     <string name="ajustes_error_importar">No se pudo importar el backup: el archivo no es válido.</string>
     <string name="ajustes_error_leer">No se pudo leer el archivo seleccionado.</string>
@@ -161,6 +166,14 @@
     <string name="resumen_jpeg_subtitulo">Resumen completo en una sola imagen, listo para compartir</string>
     <string name="resumen_total_a_cobrar">Total a cobrar: %1$s</string>
     <string name="resumen_vacio">No hay registros este mes</string>
+    <string name="resumen_descargar">Descargar</string>
+    <string name="resumen_descargado">Guardado en Descargas: %1$s</string>
+    <string name="resumen_error_descargar">No se pudo guardar en Descargas. Inténtalo de nuevo.</string>
+    <string name="resumen_permiso_descarga_denegado">Sin permiso no se puede guardar en Descargas.</string>
+    <string name="resumen_expandir_previsualizacion">Expandir vista previa</string>
+    <string name="resumen_contraer_previsualizacion">Contraer vista previa</string>
+    <string name="resumen_hero_titulo">Compartir o descargar el resumen</string>
+    <string name="resumen_formato_en_uso">Formato actual: %1$s · Cámbialo en Ajustes</string>
 
     <!-- Plantillas de semana y mes -->
     <string name="plantillas_titulo">Plantillas</string>

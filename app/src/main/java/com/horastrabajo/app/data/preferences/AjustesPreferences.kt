@@ -24,8 +24,16 @@ enum class IdiomaPreferido(val etiquetaBcp47: String?) {
     CATALAN("ca"),
 }
 
+/** Formato que generan los botones Compartir y Descargar del resumen. */
+enum class FormatoResumen(val extension: String, val mimeType: String) {
+    PDF("pdf", "application/pdf"),
+    JPEG("jpg", "image/jpeg"),
+}
+
 private val Context.ajustesDataStore by preferencesDataStore(name = "ajustes")
 private val CLAVE_TEMA = stringPreferencesKey("tema_preferido")
+private val CLAVE_FORMATO_RESUMEN = stringPreferencesKey("formato_resumen_preferido")
+
 class ThemePreferenceRepository(private val context: Context) {
 
     val temaPreferido = context.ajustesDataStore.data.map { prefs ->
@@ -34,5 +42,17 @@ class ThemePreferenceRepository(private val context: Context) {
 
     suspend fun guardarTema(tema: TemaPreferido) {
         context.ajustesDataStore.edit { prefs -> prefs[CLAVE_TEMA] = tema.name }
+    }
+}
+
+class FormatoResumenPreferenceRepository(private val context: Context) {
+
+    val formatoResumen = context.ajustesDataStore.data.map { prefs ->
+        prefs[CLAVE_FORMATO_RESUMEN]?.let { runCatching { FormatoResumen.valueOf(it) }.getOrNull() }
+            ?: FormatoResumen.PDF
+    }
+
+    suspend fun guardarFormatoResumen(formato: FormatoResumen) {
+        context.ajustesDataStore.edit { prefs -> prefs[CLAVE_FORMATO_RESUMEN] = formato.name }
     }
 }

@@ -1,6 +1,5 @@
 package com.horastrabajo.app.ui.plantillas
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -51,7 +50,6 @@ fun PlantillaMesFormSheet(
     val nombreInicial = remember { plantillaExistente?.nombre ?: "" }
     val descripcionInicial = remember { plantillaExistente?.descripcion ?: "" }
     var mostrarErrores by remember { mutableStateOf(false) }
-    var confirmarDescartarCambios by remember { mutableStateOf(false) }
     var defaultId by remember { mutableStateOf(plantillaExistente?.plantillaSemanaDefault?.id) }
     var overrides by remember {
         mutableStateOf(
@@ -62,14 +60,12 @@ fun PlantillaMesFormSheet(
     val esValido = nombre.isNotBlank()
     val defaultIdInicial = remember { plantillaExistente?.plantillaSemanaDefault?.id }
     val overridesInicial = remember { plantillaExistente?.overridesPorSemana ?: emptyMap() }
-    val hayCambios = plantillaExistente != null && (nombre != nombreInicial || descripcion != descripcionInicial || defaultId != defaultIdInicial || overrides != overridesInicial)
+    // También en una plantilla nueva: cualquier contenido cuenta como cambio sin guardar.
+    // La confirmación al salir la gestiona la pantalla propietaria de la hoja (PlantillasScreen).
+    val hayCambios = nombre != nombreInicial || descripcion != descripcionInicial || defaultId != defaultIdInicial || overrides != overridesInicial
 
     LaunchedEffect(hayCambios) {
         onDirtyChange(hayCambios)
-    }
-
-    BackHandler(enabled = hayCambios) {
-        confirmarDescartarCambios = true
     }
 
     Column(
@@ -142,9 +138,7 @@ fun PlantillaMesFormSheet(
                     mostrarErrores = true
                 }
             }) { Text(stringResource(R.string.accion_guardar)) }
-            TextButton(onClick = {
-                if (hayCambios) confirmarDescartarCambios = true else onCancelar()
-            }) { Text(stringResource(R.string.accion_cancelar)) }
+            TextButton(onClick = onCancelar) { Text(stringResource(R.string.accion_cancelar)) }
         }
     }
 
@@ -170,26 +164,6 @@ fun PlantillaMesFormSheet(
         )
     }
 
-    if (confirmarDescartarCambios) {
-        AlertDialog(
-            onDismissRequest = { confirmarDescartarCambios = false },
-            title = { Text(stringResource(R.string.cambios_sin_guardar_titulo)) },
-            text = { Text(stringResource(R.string.plantilla_cambios_mes_mensaje)) },
-            confirmButton = {
-                TextButton(onClick = { confirmarDescartarCambios = false }) {
-                    Text(stringResource(R.string.accion_seguir_editando))
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = {
-                    confirmarDescartarCambios = false
-                    onCancelar()
-                }) {
-                    Text(stringResource(R.string.accion_descartar_cambios))
-                }
-            },
-        )
-    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

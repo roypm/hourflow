@@ -32,6 +32,7 @@ object AppViewModelProvider {
         initializer {
             AjustesViewModel(
                 themePreferenceRepository = horasTrabajoApp().themePreferenceRepository,
+                formatoResumenPreferenceRepository = horasTrabajoApp().formatoResumenPreferenceRepository,
                 jsonBackupManager = horasTrabajoApp().jsonBackupManager,
             )
         }
@@ -61,6 +62,7 @@ object AppViewModelProvider {
                 entradaHorasRepository = horasTrabajoApp().entradaHorasRepository,
                 tarifaMensualRepository = horasTrabajoApp().tarifaMensualRepository,
                 dineroExtraRepository = horasTrabajoApp().dineroExtraRepository,
+                formatoResumenPreferenceRepository = horasTrabajoApp().formatoResumenPreferenceRepository,
             )
         }
         initializer {

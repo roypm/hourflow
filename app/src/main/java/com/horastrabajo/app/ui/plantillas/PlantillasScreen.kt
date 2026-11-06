@@ -1,5 +1,6 @@
 package com.horastrabajo.app.ui.plantillas
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -39,6 +40,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -52,6 +54,7 @@ import com.horastrabajo.app.domain.model.PlantillaMes
 import com.horastrabajo.app.domain.model.PlantillaSemana
 import com.horastrabajo.app.ui.AppViewModelProvider
 import com.horastrabajo.app.ui.components.localeActual
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -72,6 +75,31 @@ fun PlantillasScreen(
     var plantillaAEliminar by remember { mutableStateOf<Any?>(null) }
     var plantillaSemanaTieneCambios by remember { mutableStateOf(false) }
     var plantillaMesTieneCambios by remember { mutableStateOf(false) }
+    var confirmarDescartarSemana by remember { mutableStateOf(false) }
+    var confirmarDescartarMes by remember { mutableStateOf(false) }
+
+    // Punto único de cierre de cada hoja: ninguna vía de salida (atrás, fondo, arrastre o
+    // Cancelar) puede saltarse la confirmación si hay cambios sin guardar. El diálogo vive
+    // aquí, fuera de la hoja, para que no desaparezca con ella.
+    fun cerrarSemana() {
+        plantillaSemanaNueva = false
+        plantillaSemanaEditando = null
+        plantillaSemanaTieneCambios = false
+        confirmarDescartarSemana = false
+    }
+    fun solicitarCerrarSemana() {
+        if (plantillaSemanaTieneCambios) confirmarDescartarSemana = true else cerrarSemana()
+    }
+    fun cerrarMes() {
+        plantillaMesNueva = false
+        plantillaMesEditando = null
+        plantillaMesTieneCambios = false
+        confirmarDescartarMes = false
+    }
+    fun solicitarCerrarMes() {
+        if (plantillaMesTieneCambios) confirmarDescartarMes = true else cerrarMes()
+    }
+    val scope = rememberCoroutineScope()
 
     Scaffold(
         topBar = {
@@ -130,24 +158,58 @@ fun PlantillasScreen(
         )
         SideEffect {
             latestSemanaConfirmValueChange = { targetValue ->
-                targetValue != SheetValue.Hidden || !plantillaSemanaTieneCambios
+                if (targetValue == SheetValue.Hidden && plantillaSemanaTieneCambios) {
+                    confirmarDescartarSemana = true
+                    false
+                } else {
+                    true
+                }
             }
         }
+        // Material3 1.3 (BOM 2024.10) no tiene sheetGesturesEnabled: el arrastre con cambios
+        // lo frena el veto de confirmValueChange, que rebota la hoja y muestra el diálogo.
         ModalBottomSheet(
-            onDismissRequest = { plantillaSemanaNueva = false; plantillaSemanaEditando = null },
+            onDismissRequest = { solicitarCerrarSemana() },
             sheetState = semanaSheetState,
         ) {
+            // Dentro del contenido de la hoja: este BackHandler vive en su misma ventana y
+            // gana al atrás propio de la hoja, que si no la esconde antes de preguntar.
+            BackHandler(enabled = plantillaSemanaTieneCambios) {
+                confirmarDescartarSemana = true
+            }
             PlantillaSemanaFormSheet(
                 trabajoId = trabajoId,
                 plantillaExistente = existente,
                 onGuardar = {
                     viewModel.savePlantillaSemana(it)
-                    plantillaSemanaNueva = false; plantillaSemanaEditando = null
+                    cerrarSemana()
                 },
-                onCancelar = {
-                    plantillaSemanaNueva = false; plantillaSemanaEditando = null
-                },
+                onCancelar = { solicitarCerrarSemana() },
                 onDirtyChange = { plantillaSemanaTieneCambios = it },
+            )
+        }
+
+        if (confirmarDescartarSemana) {
+            // Seguir editando también vuelve a mostrar la hoja, por si llegó a esconderse.
+            val seguirEditandoSemana: () -> Unit = {
+                confirmarDescartarSemana = false
+                scope.launch { semanaSheetState.show() }
+                Unit
+            }
+            AlertDialog(
+                onDismissRequest = seguirEditandoSemana,
+                title = { Text(stringResource(R.string.cambios_sin_guardar_titulo)) },
+                text = { Text(stringResource(R.string.plantilla_cambios_semana_mensaje)) },
+                confirmButton = {
+                    TextButton(onClick = seguirEditandoSemana) {
+                        Text(stringResource(R.string.accion_seguir_editando))
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = { cerrarSemana() }) {
+                        Text(stringResource(R.string.accion_descartar_cambios))
+                    }
+                },
             )
         }
     }
@@ -161,25 +223,54 @@ fun PlantillasScreen(
         )
         SideEffect {
             latestMesConfirmValueChange = { targetValue ->
-                targetValue != SheetValue.Hidden || !plantillaMesTieneCambios
+                if (targetValue == SheetValue.Hidden && plantillaMesTieneCambios) {
+                    confirmarDescartarMes = true
+                    false
+                } else {
+                    true
+                }
             }
         }
         ModalBottomSheet(
-            onDismissRequest = { plantillaMesNueva = false; plantillaMesEditando = null },
+            onDismissRequest = { solicitarCerrarMes() },
             sheetState = mesSheetState,
         ) {
+            BackHandler(enabled = plantillaMesTieneCambios) {
+                confirmarDescartarMes = true
+            }
             PlantillaMesFormSheet(
                 trabajoId = trabajoId,
                 plantillaExistente = existente,
                 plantillasSemanaDisponibles = plantillasSemana,
                 onGuardar = {
                     viewModel.savePlantillaMes(it)
-                    plantillaMesNueva = false; plantillaMesEditando = null
+                    cerrarMes()
                 },
-                onCancelar = {
-                    plantillaMesNueva = false; plantillaMesEditando = null
-                },
+                onCancelar = { solicitarCerrarMes() },
                 onDirtyChange = { plantillaMesTieneCambios = it },
+            )
+        }
+
+        if (confirmarDescartarMes) {
+            val seguirEditandoMes: () -> Unit = {
+                confirmarDescartarMes = false
+                scope.launch { mesSheetState.show() }
+                Unit
+            }
+            AlertDialog(
+                onDismissRequest = seguirEditandoMes,
+                title = { Text(stringResource(R.string.cambios_sin_guardar_titulo)) },
+                text = { Text(stringResource(R.string.plantilla_cambios_mes_mensaje)) },
+                confirmButton = {
+                    TextButton(onClick = seguirEditandoMes) {
+                        Text(stringResource(R.string.accion_seguir_editando))
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = { cerrarMes() }) {
+                        Text(stringResource(R.string.accion_descartar_cambios))
+                    }
+                },
             )
         }
     }
