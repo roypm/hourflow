@@ -124,6 +124,10 @@
     <!-- Screen: Settings -->
     <string name="ajustes_titulo">Settings</string>
     <string name="ajustes_tema">Theme</string>
+    <string name="ajustes_formato_resumen">Summary format</string>
+    <string name="ajustes_formato_resumen_descripcion">The format used by the summary\'s Share and Download buttons.</string>
+    <string name="formato_resumen_pdf">PDF</string>
+    <string name="formato_resumen_jpeg">JPEG</string>
     <string name="tema_sistema">System</string>
     <string name="tema_claro">Light</string>
     <string name="tema_oscuro">Dark</string>
@@ -140,6 +144,7 @@
     <string name="ajustes_importar_titulo">Import backup</string>
     <string name="ajustes_importar_mensaje">The jobs in the file will be added as new jobs. Your current jobs will not be overwritten or deleted.</string>
     <string name="ajustes_backup_importado">Backup imported successfully.</string>
+    <string name="ajustes_backup_exportado">Backup saved successfully.</string>
     <string name="ajustes_error_exportar">The backup could not be exported.</string>
     <string name="ajustes_error_importar">The backup could not be imported: the file is not valid.</string>
     <string name="ajustes_error_leer">The selected file could not be read.</string>
@@ -156,6 +161,14 @@
     <string name="resumen_jpeg_subtitulo">Complete single-image summary, ready to share</string>
     <string name="resumen_total_a_cobrar">Total to collect: %1$s</string>
     <string name="resumen_vacio">No records this month</string>
+    <string name="resumen_descargar">Download</string>
+    <string name="resumen_descargado">Saved to Downloads: %1$s</string>
+    <string name="resumen_error_descargar">Could not save to Downloads. Please try again.</string>
+    <string name="resumen_permiso_descarga_denegado">Without permission the file cannot be saved to Downloads.</string>
+    <string name="resumen_expandir_previsualizacion">Expand preview</string>
+    <string name="resumen_contraer_previsualizacion">Collapse preview</string>
+    <string name="resumen_hero_titulo">Share or download summary</string>
+    <string name="resumen_formato_en_uso">Current format: %1$s · Change it in Settings</string>
 
     <!-- Week and month templates -->
     <string name="plantillas_titulo">Templates</string>

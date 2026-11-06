@@ -8,6 +8,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.horastrabajo.app.R
 import com.horastrabajo.app.data.export.JsonBackupManager
+import com.horastrabajo.app.data.preferences.FormatoResumen
+import com.horastrabajo.app.data.preferences.FormatoResumenPreferenceRepository
 import com.horastrabajo.app.data.preferences.IdiomaPreferido
 import com.horastrabajo.app.data.preferences.TemaPreferido
 import com.horastrabajo.app.data.preferences.ThemePreferenceRepository
@@ -23,11 +25,15 @@ import kotlinx.coroutines.withContext
 
 class AjustesViewModel(
     private val themePreferenceRepository: ThemePreferenceRepository,
+    private val formatoResumenPreferenceRepository: FormatoResumenPreferenceRepository,
     private val jsonBackupManager: JsonBackupManager,
 ) : ViewModel() {
 
     val temaPreferido: StateFlow<TemaPreferido> = themePreferenceRepository.temaPreferido
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), TemaPreferido.SISTEMA)
+
+    val formatoResumen: StateFlow<FormatoResumen> = formatoResumenPreferenceRepository.formatoResumen
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), FormatoResumen.PDF)
 
     fun obtenerIdiomaActual(): IdiomaPreferido = idiomaDesdeAppCompat()
 
@@ -47,6 +53,10 @@ class AjustesViewModel(
 
     fun cambiarTema(tema: TemaPreferido) {
         viewModelScope.launch { themePreferenceRepository.guardarTema(tema) }
+    }
+
+    fun cambiarFormatoResumen(formato: FormatoResumen) {
+        viewModelScope.launch { formatoResumenPreferenceRepository.guardarFormatoResumen(formato) }
     }
 
     fun cambiarIdioma(idioma: IdiomaPreferido) {
@@ -70,6 +80,11 @@ class AjustesViewModel(
                 _mensaje.value = R.string.ajustes_error_exportar
             }
         }
+    }
+
+    /** Reportado por la UI cuando el JSON ya se ha escrito en el destino elegido por el usuario. */
+    fun notificarBackupExportado() {
+        _mensaje.value = R.string.ajustes_backup_exportado
     }
 
     fun importarBackup(contenidoJson: String) {

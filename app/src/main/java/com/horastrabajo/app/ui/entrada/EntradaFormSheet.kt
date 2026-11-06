@@ -85,7 +85,8 @@ fun EntradaFormSheet(
         forzarFormulario = false
     }
     fun solicitarCancelarFormulario() {
-        if (entradaEnEdicion != null && entradaEditadaTieneCambios) {
+        // Sirve igual para editar un turno existente que para añadir uno nuevo a un día con turnos.
+        if (entradaEditadaTieneCambios) {
             cerrarTrasDescartarCambios = false
             confirmarDescartarCambios = true
         } else {
@@ -94,11 +95,11 @@ fun EntradaFormSheet(
     }
 
     LaunchedEffect(entradaEditadaTieneCambios) {
-        onDirtyChange(entradaEditadaTieneCambios && entradaEnEdicion != null)
+        onDirtyChange(entradaEditadaTieneCambios)
     }
 
     Box(modifier = Modifier.fillMaxWidth()) {
-        BackHandler(enabled = entradaEnEdicion != null && entradaEditadaTieneCambios) {
+        BackHandler(enabled = mostrarFormulario && entradaEditadaTieneCambios) {
             cerrarTrasDescartarCambios = true
             confirmarDescartarCambios = true
         }
@@ -337,13 +338,21 @@ private fun NuevaEntradaForm(
         notas = notas.takeIf { mostrarNotas && it.isNotBlank() },
         precioPorHoraCustom = if (usarTarifaCustom) textoADinero(tarifaCustomTexto) else null,
     )
+    // En edición se compara con el turno original; en un turno nuevo, con los valores por defecto
+    // del formulario (09:00-17:00, sin nocturno, sin nota ni tarifa personalizada).
     val hayCambiosEdicion = entradaInicial?.let { inicial ->
         entradaParaGuardar.horaEntrada != inicial.horaEntrada ||
             entradaParaGuardar.horaSalida != inicial.horaSalida ||
             entradaParaGuardar.esDiaSiguiente != inicial.esDiaSiguiente ||
             entradaParaGuardar.notas.orEmpty() != inicial.notas.orEmpty() ||
             entradaParaGuardar.precioPorHoraCustom != inicial.precioPorHoraCustom
-    } ?: false
+    } ?: (
+        entradaParaGuardar.horaEntrada != LocalTime.of(9, 0) ||
+            entradaParaGuardar.horaSalida != LocalTime.of(17, 0) ||
+            entradaParaGuardar.esDiaSiguiente ||
+            entradaParaGuardar.notas != null ||
+            entradaParaGuardar.precioPorHoraCustom != null
+        )
 
     LaunchedEffect(hayCambiosEdicion) {
         onDirtyChange(hayCambiosEdicion)

@@ -40,8 +40,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.horastrabajo.app.R
-import com.horastrabajo.app.data.export.compartirArchivo
-import com.horastrabajo.app.data.export.directorioExports
+import com.horastrabajo.app.data.preferences.FormatoResumen
 import com.horastrabajo.app.data.preferences.IdiomaPreferido
 import com.horastrabajo.app.data.preferences.TemaPreferido
 import com.horastrabajo.app.ui.AppViewModelProvider
@@ -49,7 +48,7 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.io.File
+import java.io.IOException
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -60,6 +59,7 @@ fun AjustesScreen(
     viewModel: AjustesViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
     val temaPreferido by viewModel.temaPreferido.collectAsState()
+    val formatoResumen by viewModel.formatoResumen.collectAsState()
     val idiomaPreferido = viewModel.obtenerIdiomaActual()
     val mensaje by viewModel.mensaje.collectAsState()
     val contexto = LocalContext.current
@@ -75,6 +75,21 @@ fun AjustesScreen(
     }
 
     var mostrarConfirmacionImportar by remember { mutableStateOf(false) }
+
+    // El sistema pregunta dónde guardar (gestor de archivos predeterminado) antes de generar el JSON.
+    val selectorExportacion = rememberLauncherForActivityResult(
+        ActivityResultContracts.CreateDocument("application/json"),
+    ) { uri ->
+        if (uri == null) return@rememberLauncherForActivityResult
+        viewModel.exportarBackup { json ->
+            withContext(Dispatchers.IO) {
+                contexto.contentResolver.openOutputStream(uri, "wt")?.use { salida ->
+                    salida.write(json.toByteArray(Charsets.UTF_8))
+                } ?: throw IOException("No se pudo abrir el destino elegido para el backup")
+            }
+            viewModel.notificarBackupExportado()
+        }
+    }
 
     val selectorImportacion = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
         if (uri == null) return@rememberLauncherForActivityResult
@@ -137,6 +152,22 @@ fun AjustesScreen(
                 }
             }
 
+            SeccionAjustes(titulo = stringResource(R.string.ajustes_formato_resumen)) {
+                Text(
+                    stringResource(R.string.ajustes_formato_resumen_descripcion),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
+                )
+                FormatoResumen.entries.forEach { opcion ->
+                    FilaOpcion(
+                        etiqueta = stringResource(etiquetaFormato(opcion)),
+                        seleccionada = formatoResumen == opcion,
+                        onSeleccionar = { viewModel.cambiarFormatoResumen(opcion) },
+                    )
+                }
+            }
+
             SeccionAjustes(titulo = stringResource(R.string.ajustes_backup)) {
                 Text(
                     stringResource(R.string.ajustes_backup_descripcion),
@@ -152,12 +183,8 @@ fun AjustesScreen(
                 )
                 TextButton(
                     onClick = {
-                        viewModel.exportarBackup { json ->
-                            val marca = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HHmm"))
-                            val archivo = File(directorioExports(contexto), "${marca}_HourFlow_backup.json")
-                            withContext(Dispatchers.IO) { archivo.writeText(json) }
-                            compartirArchivo(contexto, archivo, "application/json")
-                        }
+                        val marca = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HHmm"))
+                        selectorExportacion.launch("${marca}_HourFlow_backup.json")
                     },
                     modifier = Modifier.padding(start = 8.dp),
                 ) { Text(stringResource(R.string.ajustes_exportar_backup)) }
@@ -233,6 +260,11 @@ private fun FilaOpcion(etiqueta: String, seleccionada: Boolean, onSeleccionar: (
         RadioButton(selected = seleccionada, onClick = null)
         Text(text = etiqueta, modifier = Modifier.padding(start = 8.dp))
     }
+}
+
+private fun etiquetaFormato(formato: FormatoResumen): Int = when (formato) {
+    FormatoResumen.PDF -> R.string.formato_resumen_pdf
+    FormatoResumen.JPEG -> R.string.formato_resumen_jpeg
 }
 
 private fun etiquetaTema(tema: TemaPreferido): Int = when (tema) {
